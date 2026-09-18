@@ -1,0 +1,247 @@
+---
+import mapImg from "../assets/map.png";
+---
+
+<!-- TERMINAL / SIMULATION INTERACTIVE -->
+<div
+    class="overflow-hidden rounded-[13px] bg-[#061d2b] border border-[rgba(157,210,225,0.6)] shadow-[0_17px_32px_rgba(79,156,178,0.12),0_2px_7px_rgba(62,123,141,0.08)]"
+>
+    <div
+        class="flex items-center justify-between h-[48px] px-5 border-b border-[rgba(153,227,218,0.13)] text-[#72a69e] text-[15px] font-mono leading-none"
+    >
+        <div class="flex items-center gap-[10px]">
+            <span class="w-[12px] h-[12px] rounded-full opacity-90 bg-[#de6e7e]"
+            ></span>
+            <span class="w-[12px] h-[12px] rounded-full opacity-90 bg-[#ebb35c]"
+            ></span>
+            <span class="w-[12px] h-[12px] rounded-full opacity-90 bg-[#68c798]"
+            ></span>
+        </div>
+        <span
+            class="text-center tracking-[0.03em] flex-1 font-bold text-[16px] text-[#86c5bc]"
+            >portal.subaru-starlink.internal/vehicle/access</span
+        >
+        <button
+            id="reset-sim"
+            class="text-[22px] hover:text-white cursor-pointer transition-colors px-2"
+            title="Recommencer">⟳</button
+        >
+    </div>
+
+    <div
+        id="sim-screen"
+        class="min-h-[460px] p-8 bg-[radial-gradient(circle_at_50%_0%,rgba(11,100,106,0.18),transparent_54%)] font-mono flex flex-col justify-center items-center"
+    >
+        <!-- ÉTAPE 0 -->
+        <div
+            id="sim-step-0"
+            class="flex flex-col items-center justify-center w-full"
+        >
+            <div class="text-[#b2d5ce] text-[17px] mb-6">
+                $ initiate <span class="text-[#61daa9]">vehicle_lookup</span> --target
+                starlink
+            </div>
+            <button
+                id="start-sim-btn"
+                class="py-5 px-11 border border-[#38b06c] rounded-xl text-[#38b06c] bg-[#10382b] font-mono text-[18px] font-bold cursor-pointer transition-all duration-200 hover:brightness-125 shadow-xl"
+                type="button"
+            >
+                Rechercher le véhicule
+            </button>
+            <div
+                class="mt-6 text-[15px] text-[#b2d5ce] flex items-center gap-2.5"
+            >
+                <span
+                    class="inline-block w-3 h-3 rounded-full bg-[#68c798] animate-pulse"
+                ></span> simulation prête
+            </div>
+        </div>
+
+        <!-- ÉTAPE 1 -->
+        <div
+            id="sim-step-1"
+            class="hidden w-full max-w-[800px] grid grid-cols-2 gap-8 my-auto animate-[fadeIn_0.5s_ease-out]"
+        >
+            <div class="flex flex-col gap-3">
+                <span class="text-[#72a69e] text-[15px] font-bold"
+                    >Nom de famille</span
+                >
+                <div
+                    class="py-5 px-6 border border-[#38b06c] rounded-[12px] bg-[#0a251d] text-[#61daa9] text-[18px] font-semibold shadow-[0_0_20px_rgba(56,176,108,0.25)] animate-[slideUp_0.4s_ease-out]"
+                >
+                    佐藤 (SATO)
+                </div>
+            </div>
+            <div class="flex flex-col gap-3">
+                <span class="text-[#72a69e] text-[15px] font-bold"
+                    >Code postal</span
+                >
+                <div
+                    class="py-5 px-6 border border-[#38b06c] rounded-[12px] bg-[#0a251d] text-[#61daa9] text-[18px] font-semibold shadow-[0_0_20px_rgba(56,176,108,0.25)] animate-[slideUp_0.4s_ease-out_0.2s_both]"
+                >
+                    154-0004
+                </div>
+            </div>
+        </div>
+
+        <!-- ÉTAPE 2 -->
+        <div
+            id="sim-step-2"
+            class="hidden w-full grid grid-cols-2 gap-6 my-auto"
+        >
+            <!-- Vignette 1 : Carte GPS intégrant mapImg -->
+            <div
+                class="border border-[#38b06c] rounded-[14px] bg-[#0a251d]/90 p-5 shadow-[0_0_20px_rgba(56,176,108,0.15)] flex flex-col justify-between animate-[slideUp_0.4s_ease-out]"
+            >
+                <div class="text-[#72a69e] text-[14px] font-bold mb-3">
+                    Subaru Impreza 2023 -- Historique localisation
+                </div>
+                <div
+                    class="relative h-[150px] bg-[#122e25] rounded overflow-hidden flex items-center justify-center border border-[#38b06c]/30"
+                >
+                    <img
+                        src={mapImg.src}
+                        alt="Carte de localisation"
+                        class="absolute inset-0 w-full h-full object-cover opacity-60"
+                    />
+                    <div
+                        class="w-5 h-5 bg-orange-500 rounded-full animate-ping absolute z-10"
+                    >
+                    </div>
+                    <div
+                        class="w-4 h-4 bg-orange-500 rounded-full absolute z-10"
+                    >
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette 2 : Historique adresses -->
+            <div
+                class="border border-[#38b06c] rounded-[14px] bg-[#0a251d]/90 p-5 shadow-[0_0_20px_rgba(56,176,108,0.15)] flex flex-col justify-between animate-[slideUp_0.4s_ease-out_0.15s_both]"
+            >
+                <div class="text-[#72a69e] text-[14px] font-bold mb-3">
+                    Subaru Impreza 2023 -- Historique localisation
+                </div>
+                <div class="flex flex-col gap-2.5 text-[13px] text-[#b2d5ce]">
+                    <div
+                        class="flex justify-between py-1.5 border-b border-[#38b06c]/20"
+                    >
+                        <span>CHŪŌ-DŌRI (中央通り)</span><span
+                            class="text-[#38b06c] font-semibold"
+                            >14/03/2026 : 07:52</span
+                        >
+                    </div>
+                    <div
+                        class="flex justify-between py-1.5 border-b border-[#38b06c]/20"
+                    >
+                        <span>KICHIJŌJI KITA-DŌRI</span><span
+                            class="text-[#38b06c] font-semibold"
+                            >14/03/2026 : 08:41</span
+                        >
+                    </div>
+                    <div
+                        class="flex justify-between py-1.5 border-b border-[#38b06c]/20"
+                    >
+                        <span>ROUTE VERS LE PARC</span><span
+                            class="text-[#38b06c] font-semibold"
+                            >14/03/2026 : 09:03</span
+                        >
+                    </div>
+                    <div class="flex justify-between py-1.5">
+                        <span>CHŪŌ-DŌRI (中央通り)</span><span
+                            class="text-[#38b06c] font-semibold"
+                            >14/03/2026 : 16:00</span
+                        >
+                    </div>
+                </div>
+            </div>
+
+            <!-- Vignette 3 : Contrôle véhicule -->
+            <div
+                class="border border-[#38b06c] rounded-[14px] bg-[#0a251d]/90 p-5 shadow-[0_0_20px_rgba(56,176,108,0.15)] flex flex-col justify-center items-center gap-4 animate-[slideUp_0.4s_ease-out_0.3s_both]"
+            >
+                <div class="text-[#72a69e] text-[14px] font-bold self-start">
+                    Subaru Impreza 2023 -- Contrôle du véhicule
+                </div>
+                <button
+                    class="w-full py-3 bg-[#1b4e3d] text-[#61daa9] rounded-lg text-[15px] font-extrabold border border-[#38b06c] hover:bg-[#38b06c] hover:text-[#061d2b] transition-colors cursor-pointer shadow-md"
+                    >DÉMARRER</button
+                >
+                <button
+                    class="w-full py-3 bg-[#4e1b1b] text-[#da6161] rounded-lg text-[15px] font-extrabold border border-[#da6161] hover:bg-[#da6161] hover:text-white transition-colors cursor-pointer shadow-md"
+                    >DÉVERROUILLER</button
+                >
+            </div>
+
+            <!-- Vignette 4 : Infos personnelles -->
+            <div
+                class="border border-[#38b06c] rounded-[14px] bg-[#0a251d]/90 p-5 shadow-[0_0_20px_rgba(56,176,108,0.15)] flex flex-col justify-between animate-[slideUp_0.4s_ease-out_0.45s_both]"
+            >
+                <div class="text-[#72a69e] text-[14px] font-bold mb-2">
+                    Subaru Impreza 2023 -- Infos personnelles
+                </div>
+                <div class="grid grid-cols-2 gap-3 text-[13px] text-[#b2d5ce]">
+                    <div>
+                        <div class="text-[#38b06c] mb-1 font-semibold">
+                            090-1234-5678
+                        </div>
+                        <div class="text-[#38b06c] font-semibold">
+                            080-4567-1234
+                        </div>
+                        <div class="text-[#38b06c] mt-2 font-semibold">
+                            03-1234-5678
+                        </div>
+                    </div>
+                    <div class="border-l border-[#38b06c]/30 pl-3">
+                        <div class="text-[11px] text-[#72a69e] font-bold">
+                            ADRESSE
+                        </div>
+                        <div class="leading-tight mt-1">
+                            〒154-0004<br />東京都世田谷区太子堂1-2-3<br
+                            />サンプルマンション201号室
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3 pt-2 border-t border-[#38b06c]/30 text-[13px]">
+                    <span class="text-[#72a69e] text-[11px] font-bold block"
+                        >暗証番号 (ANSHŌ BANGŌ) - PIN VÉHICULE</span
+                    >
+                    <span class="text-[#38b06c] font-black text-[15px]"
+                        >1234</span
+                    >
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Simulation interactive Cas 1 (Apparition séquentielle des vignettes)
+    document.addEventListener("DOMContentLoaded", () => {
+        const startBtn = document.getElementById("start-sim-btn");
+        const resetBtn = document.getElementById("reset-sim");
+        const step0 = document.getElementById("sim-step-0");
+        const step1 = document.getElementById("sim-step-1");
+        const step2 = document.getElementById("sim-step-2");
+
+        if (startBtn && step0 && step1 && step2) {
+            startBtn.addEventListener("click", () => {
+                step0.classList.add("hidden");
+                step1.classList.remove("hidden");
+
+                setTimeout(() => {
+                    step1.classList.add("hidden");
+                    step2.classList.remove("hidden");
+                }, 1800);
+            });
+        }
+
+        if (resetBtn && step0 && step1 && step2) {
+            resetBtn.addEventListener("click", () => {
+                step2.classList.add("hidden");
+                step1.classList.add("hidden");
+                step0.classList.remove("hidden");
+            });
+        }
+    });
+</script>

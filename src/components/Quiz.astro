@@ -1,0 +1,129 @@
+<!-- QUIZ CARD -->
+<div
+    id="quiz-container"
+    class="relative w-full max-w-[680px] min-h-auto mx-auto mt-[38px] py-[30px] px-[35px] bg-[linear-gradient(345.37deg,rgba(255,255,255,0.63)-38.59%,#107AA5_138.59%)] shadow-[0px_18px_48px_rgba(6,27,43,0.086),inset_0px_1px_0px_rgba(255,255,255,0.86)] rounded-[24px] overflow-hidden [@media(max-width:840px)]:py-[20px] [@media(max-width:840px)]:px-[20px]"
+>
+    <div class="flex justify-between items-center w-full mb-4">
+        <span
+            class="font-black text-[24px] leading-[28px] text-[rgba(16,122,165,0.46)]"
+            >Quiz</span
+        >
+        <span
+            id="quiz-progress"
+            class="font-black text-[24px] leading-[28px] text-[rgba(16,122,165,0.46)]"
+        ></span>
+    </div>
+
+    <h3
+        id="quiz-question"
+        class="w-full font-bold text-[clamp(18px,2.2vw,24px)] leading-[1.3] text-white mb-6"
+    >
+    </h3>
+
+    <div id="quiz-options" class="flex flex-col gap-3 w-full items-center">
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question:
+                "Combien de temps faut-il pour cloner une clé Tesla à proximité du porte-clé ?",
+            options: [
+                "Quelques secondes",
+                "Quelques minutes",
+                "Quelques heures",
+                "Quelques jours",
+            ],
+            answer: 0,
+        },
+        {
+            question:
+                "Combien de temps faut-il pour cloner une clé Tesla à proximité du véhicule ?",
+            options: [
+                "Quelques secondes",
+                "Quelques minutes",
+                "Quelques heures",
+                "Quelques jours",
+            ],
+            answer: 0,
+        },
+        {
+            question:
+                "Combien de temps faut-il pour cloner une clé Tesla si l’attaquant dispose d’un relais ?",
+            options: [
+                "Moins d’une seconde",
+                "Quelques secondes",
+                "Quelques minutes",
+                "Quelques heures",
+            ],
+            answer: 1,
+        },
+        {
+            question:
+                "Combien de temps faut-il pour cloner une clé Tesla si la clé est laissée dans un sac ?",
+            options: [
+                "Quelques secondes",
+                "Quelques minutes",
+                "Quelques heures",
+                "Impossible dans ce cas",
+            ],
+            answer: 0,
+        },
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    const questionEl = document.getElementById("quiz-question");
+    const optionsEl = document.getElementById("quiz-options");
+    const progressEl = document.getElementById("quiz-progress");
+
+    function loadQuestion() {
+        if (!questionEl || !optionsEl || !progressEl) return;
+        const q = quizData[currentQuestion];
+
+        questionEl.textContent = q.question;
+        progressEl.textContent = `${currentQuestion + 1} / ${quizData.length}`;
+
+        optionsEl.innerHTML = "";
+
+        q.options.forEach((opt, index) => {
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = `flex flex-row justify-center items-center py-2.5 px-4 gap-[10px] w-full max-w-[540px] h-[50px] bg-[rgba(255,255,255,0.25)] shadow-[0px_12px_30px_rgba(6,27,43,0.08),inset_0px_1px_0px_rgba(255,255,255,0.86)] rounded-[20px] border-none font-sans font-normal text-[17px] leading-snug text-[#107AA5] cursor-pointer transition-all duration-200 hover:bg-[rgba(255,255,255,0.45)] hover:-translate-y-0.5`;
+            btn.textContent = opt;
+            btn.onclick = () => selectAnswer(index);
+            optionsEl.appendChild(btn);
+        });
+    }
+
+    function selectAnswer(index) {
+        if (index === quizData[currentQuestion].answer) {
+            score++;
+        }
+
+        currentQuestion++;
+
+        if (currentQuestion < quizData.length) {
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        if (!questionEl || !optionsEl || !progressEl) return;
+        questionEl.textContent = "Résultat du quiz";
+        optionsEl.innerHTML = "";
+        progressEl.textContent = "";
+
+        const result = document.createElement("p");
+        result.className = "mt-6 text-white text-[20px] font-bold text-center";
+        result.textContent = `Tu as ${score} bonne(s) réponse(s) sur ${quizData.length}.`;
+
+        optionsEl.appendChild(result);
+    }
+
+    loadQuestion();
+</script>

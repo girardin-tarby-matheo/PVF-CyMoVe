@@ -1,0 +1,575 @@
+---
+// Composant Astro pour le Nuage de Mots Connectés
+// Thème Cybersécurité (Cartes Navy sombres, design moderne et épuré, sans barres de scroll)
+---
+
+<div
+    class="mx-auto p-6 bg-white text-slate-800 rounded-3xl shadow-2xl border border-slate-200 font-sans"
+>
+    <div class="mb-8 text-center">
+        <h2
+            class="text-3xl font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent"
+        >
+            Réseau de Mots Connectés
+        </h2>
+        <p class="text-sm text-slate-500 mt-2">
+            Ajoutez vos mots ou groupes de mots un par un. Les bulles s'adaptent
+            automatiquement à la longueur du texte !
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Panneau de contrôle (Carte style Navy sombre) -->
+        <div
+            class="lg:col-span-1 bg-slate-900 text-slate-100 p-5 rounded-2xl shadow-xl flex flex-col space-y-4 border border-slate-800"
+        >
+            <div>
+                <label
+                    for="word-item-input"
+                    class="block text-[11px] font-semibold tracking-wider text-slate-400 uppercase mb-2"
+                >
+                    Ajouter un mot ou groupe :
+                </label>
+                <div class="flex gap-2">
+                    <input
+                        type="text"
+                        id="word-item-input"
+                        class="flex-1 p-2.5 bg-slate-800 border border-slate-700 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none text-slate-100 text-xs placeholder-slate-500 transition"
+                        placeholder="Ex: Cybersécurité, Phishing..."
+                    />
+                    <button
+                        id="add-word-btn"
+                        class="px-3.5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-medium rounded-xl shadow-md transition transform active:scale-95 cursor-pointer flex items-center justify-center"
+                        title="Ajouter"
+                    >
+                        <svg
+                            class="w-4 h-4"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                stroke-width="2"
+                                d="M12 4v16m8-8H4"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="flex flex-col flex-1">
+                <div class="flex items-center justify-between mb-2">
+                    <span
+                        class="text-[11px] font-medium text-slate-400 uppercase tracking-wider"
+                        >Mots enregistrés (<span id="word-count-badge">0</span
+                        >)</span
+                    >
+                    <button
+                        id="clear-all-btn"
+                        class="text-[11px] text-rose-400 hover:text-rose-300 transition hidden font-medium cursor-pointer"
+                        >Tout effacer</button
+                    >
+                </div>
+
+                <!-- Liste fluide avec puces compactes et élégantes, scrollbar entièrement masquée -->
+                <div
+                    id="words-list-container"
+                    class="bg-slate-950/60 p-3 rounded-xl border border-slate-800 flex flex-wrap gap-1.5 min-h-[110px] max-h-[160px] overflow-y-auto items-start content-start [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                >
+                    <div
+                        id="list-empty-hint"
+                        class="w-full h-full flex items-center justify-center text-xs text-slate-500 italic py-8 text-center"
+                    >
+                        Aucun mot ajouté pour l'instant.
+                    </div>
+                </div>
+            </div>
+
+            <button
+                id="download-png-btn"
+                class="w-full py-2.5 px-4 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-medium rounded-xl shadow-lg transition transform active:scale-95 cursor-pointer flex items-center justify-center gap-2 text-xs"
+            >
+                <svg
+                    class="w-4 h-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
+                    ></path>
+                </svg>
+                Télécharger en PNG
+            </button>
+
+            <div
+                class="bg-slate-800/60 p-3 rounded-xl border border-slate-700/50 text-xs text-slate-300 space-y-1"
+            >
+                <p
+                    class="font-semibold text-blue-400 flex items-center gap-1 text-[11px]"
+                >
+                    <span>💡</span> Astuce :
+                </p>
+                <p class="text-slate-400 text-[11px] leading-relaxed">
+                    Glissez-déposez les bulles sur le canvas pour réorganiser
+                    votre réseau avant l'export.
+                </p>
+            </div>
+        </div>
+
+        <div
+            class="lg:col-span-2 relative bg-slate-950 rounded-2xl border border-slate-800 overflow-hidden flex items-center justify-center min-h-[450px] shadow-inner"
+        >
+            <canvas
+                id="network-canvas"
+                class="w-full h-full cursor-grab active:cursor-grabbing block"
+            ></canvas>
+
+            <div
+                id="empty-state"
+                class="absolute inset-0 flex flex-col items-center justify-center text-slate-500 pointer-events-none p-6 text-center"
+            >
+                <svg
+                    class="w-14 h-14 mb-3 stroke-current opacity-30"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                >
+                    <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.2"
+                        d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+                    ></path>
+                </svg>
+                <span class="text-sm font-medium text-slate-400"
+                    >Ajoutez des mots ou groupes pour générer le réseau</span
+                >
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const wordInput = document.getElementById("word-item-input");
+        const addBtn = document.getElementById("add-word-btn");
+        const wordsListContainer = document.getElementById(
+            "words-list-container",
+        );
+        const listEmptyHint = document.getElementById("list-empty-hint");
+        const wordCountBadge = document.getElementById("word-count-badge");
+        const clearAllBtn = document.getElementById("clear-all-btn");
+        const downloadPngBtn = document.getElementById("download-png-btn");
+        const canvas = document.getElementById("network-canvas");
+        const emptyState = document.getElementById("empty-state");
+        const ctx = canvas.getContext("2d");
+
+        // Tableau dynamique stockant les mots / groupes saisis par défaut
+        let userWords = [
+            "Cybersécurité",
+            "Phishing",
+            "Ransomware",
+            "Attaque Man-in-the-Middle",
+            "WiFi piégé",
+        ];
+
+        let nodes = [];
+        let links = [];
+        let simulationInterval = null;
+        let draggedNode = null;
+        let isDragging = false;
+
+        // Ajuster la résolution haute définition du canvas
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * window.devicePixelRatio;
+            canvas.height = rect.height * window.devicePixelRatio;
+            ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+        }
+
+        // Palette de couleurs élégante (Bleus, Indigos, Violets, Cyans)
+        const nodeColors = [
+            { bg: "#2563eb", border: "#60a5fa", text: "#ffffff" }, // Blue 600
+            { bg: "#4f46e5", border: "#818cf8", text: "#ffffff" }, // Indigo 600
+            { bg: "#0284c7", border: "#38bdf8", text: "#ffffff" }, // Sky 600
+            { bg: "#7c3aed", border: "#a78bfa", text: "#ffffff" }, // Violet 600
+            { bg: "#0d9488", border: "#2dd4bf", text: "#ffffff" }, // Teal 600
+        ];
+
+        function updateWordsListUI() {
+            const items = wordsListContainer.querySelectorAll(".word-tag-chip");
+            items.forEach((el) => el.remove());
+
+            wordCountBadge.textContent = userWords.length;
+
+            if (userWords.length === 0) {
+                listEmptyHint.style.display = "flex";
+                clearAllBtn.classList.add("hidden");
+            } else {
+                listEmptyHint.style.display = "none";
+                clearAllBtn.classList.remove("hidden");
+
+                userWords.forEach((word, index) => {
+                    const chip = document.createElement("div");
+                    chip.className =
+                        "word-tag-chip inline-flex items-center gap-1.5 bg-slate-900 border border-slate-700/80 px-2.5 py-1 rounded-lg text-[11px] text-slate-200 transition hover:border-slate-600 shadow-sm";
+
+                    const span = document.createElement("span");
+                    span.className = "font-medium max-w-[140px] truncate";
+                    span.textContent = word;
+                    span.title = word;
+
+                    const deleteBtn = document.createElement("button");
+                    deleteBtn.className =
+                        "text-slate-400 hover:text-rose-400 transition cursor-pointer p-0.5";
+                    deleteBtn.innerHTML = `
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    `;
+                    deleteBtn.title = "Supprimer";
+                    deleteBtn.addEventListener("click", () => {
+                        userWords.splice(index, 1);
+                        updateWordsListUI();
+                        generateGraph();
+                    });
+
+                    chip.appendChild(span);
+                    chip.appendChild(deleteBtn);
+                    wordsListContainer.appendChild(chip);
+                });
+            }
+        }
+
+        function generateGraph() {
+            resizeCanvas();
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+
+            if (userWords.length === 0) {
+                nodes = [];
+                links = [];
+                emptyState.style.display = "flex";
+                draw();
+                return;
+            }
+
+            emptyState.style.display = "none";
+
+            // Création des nœuds avec taille responsive selon la longueur du mot/groupe
+            nodes = userWords.map((word, index) => {
+                const charCount = word.length;
+                const baseRadius = 26;
+                const radius = Math.max(
+                    baseRadius,
+                    Math.min(75, baseRadius + charCount * 3.2),
+                );
+
+                const angle = (index / userWords.length) * 2 * Math.PI;
+                const dist = 90 + Math.random() * 50;
+                const colorObj = nodeColors[index % nodeColors.length];
+
+                return {
+                    id: word,
+                    label: word,
+                    radius: radius,
+                    x: width / 2 + Math.cos(angle) * dist,
+                    y: height / 2 + Math.sin(angle) * dist,
+                    vx: 0,
+                    vy: 0,
+                    color: colorObj,
+                };
+            });
+
+            // Création des liens du graphe (réseau interconnecté)
+            links = [];
+            for (let i = 0; i < nodes.length; i++) {
+                if (i < nodes.length - 1) {
+                    links.push({ source: nodes[i], target: nodes[i + 1] });
+                }
+                if (i > 1 && i % 2 === 0) {
+                    links.push({ source: nodes[i], target: nodes[0] });
+                }
+                if (i < nodes.length - 2 && i % 3 === 0) {
+                    links.push({ source: nodes[i], target: nodes[i + 2] });
+                }
+            }
+
+            startSimulation();
+        }
+
+        function startSimulation() {
+            if (simulationInterval) clearInterval(simulationInterval);
+
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            const centerX = width / 2;
+            const centerY = height / 2;
+
+            let iterations = 0;
+            const maxIterations = 140;
+
+            simulationInterval = setInterval(() => {
+                iterations++;
+
+                // Répulsion inter-nœuds
+                for (let i = 0; i < nodes.length; i++) {
+                    for (let j = i + 1; j < nodes.length; j++) {
+                        const dx = nodes[j].x - nodes[i].x;
+                        const dy = nodes[j].y - nodes[i].y;
+                        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                        const minDist = nodes[i].radius + nodes[j].radius + 35;
+
+                        if (dist < minDist) {
+                            const force = ((minDist - dist) / dist) * 0.4;
+                            nodes[i].vx -= dx * force;
+                            nodes[i].vy -= dy * force;
+                            nodes[j].vx += dx * force;
+                            nodes[j].vy += dy * force;
+                        }
+                    }
+                }
+
+                // Attraction des liens
+                links.forEach((link) => {
+                    const dx = link.target.x - link.source.x;
+                    const dy = link.target.y - link.source.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                    const targetDist = 130;
+                    const force = ((dist - targetDist) / dist) * 0.03;
+
+                    if (link.source !== draggedNode) {
+                        link.source.vx += dx * force;
+                        link.source.vy += dy * force;
+                    }
+                    if (link.target !== draggedNode) {
+                        link.target.vy -= dy * force;
+                    }
+                });
+
+                // Gravité centrale et vélocité
+                nodes.forEach((node) => {
+                    if (node === draggedNode) return;
+                    const dx = centerX - node.x;
+                    const dy = centerY - node.y;
+                    node.vx += dx * 0.01;
+                    node.vy += dy * 0.01;
+
+                    node.vx *= 0.82;
+                    node.vy *= 0.82;
+
+                    node.x += node.vx;
+                    node.y += node.vy;
+
+                    node.x = Math.max(
+                        node.radius + 10,
+                        Math.min(width - node.radius - 10, node.x),
+                    );
+                    node.y = Math.max(
+                        node.radius + 10,
+                        Math.min(height - node.radius - 10, node.y),
+                    );
+                });
+
+                draw();
+
+                if (iterations > maxIterations) {
+                    clearInterval(simulationInterval);
+                }
+            }, 20);
+        }
+
+        function draw() {
+            const width = canvas.clientWidth;
+            const height = canvas.clientHeight;
+            ctx.clearRect(0, 0, width, height);
+
+            // Fond sombre du canvas lors du dessin
+            ctx.fillStyle = "#020617";
+            ctx.fillRect(0, 0, width, height);
+
+            // Dessiner les connexions
+            ctx.strokeStyle = "rgba(100, 116, 139, 0.35)";
+            ctx.lineWidth = 2;
+            links.forEach((link) => {
+                ctx.beginPath();
+                ctx.moveTo(link.source.x, link.source.y);
+                ctx.lineTo(link.target.x, link.target.y);
+                ctx.stroke();
+            });
+
+            // Dessiner les bulles de mots
+            nodes.forEach((node) => {
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, node.radius, 0, 2 * Math.PI);
+
+                ctx.shadowColor = "rgba(0, 0, 0, 0.5)";
+                ctx.shadowBlur = 12;
+                ctx.shadowOffsetX = 0;
+                ctx.shadowOffsetY = 4;
+
+                ctx.fillStyle = node.color.bg;
+                ctx.fill();
+
+                ctx.lineWidth = 2.5;
+                ctx.strokeStyle = node.color.border;
+                ctx.stroke();
+                ctx.restore();
+
+                // Texte dans la bulle
+                ctx.fillStyle = node.color.text;
+                const fontSize = Math.max(10, Math.min(13, node.radius * 0.35));
+                ctx.font = `600 ${fontSize}px Inter, sans-serif`;
+                ctx.textAlign = "center";
+                ctx.textBaseline = "middle";
+
+                const wordsArr = node.label.split(" ");
+                if (wordsArr.length > 1 && node.radius > 35) {
+                    let lines = [];
+                    let currentLine = wordsArr[0];
+
+                    for (let i = 1; i < wordsArr.length; i++) {
+                        if (
+                            (currentLine + " " + wordsArr[i]).length *
+                                (fontSize * 0.6) <
+                            node.radius * 1.6
+                        ) {
+                            currentLine += " " + wordsArr[i];
+                        } else {
+                            lines.push(currentLine);
+                            currentLine = wordsArr[i];
+                        }
+                    }
+                    lines.push(currentLine);
+
+                    const lineHeight = fontSize * 1.2;
+                    let startY = node.y - ((lines.length - 1) * lineHeight) / 2;
+
+                    lines.forEach((line, idx) => {
+                        ctx.fillText(line, node.x, startY + idx * lineHeight);
+                    });
+                } else {
+                    let displayLabel = node.label;
+                    const maxChars = Math.floor(node.radius / 3.5);
+                    if (displayLabel.length > maxChars && maxChars > 3) {
+                        displayLabel =
+                            displayLabel.substring(0, maxChars) + "..";
+                    }
+                    ctx.fillText(displayLabel, node.x, node.y);
+                }
+            });
+        }
+
+        function handleAddWord() {
+            const val = wordInput.value.trim();
+            if (!val) return;
+            userWords.push(val);
+            wordInput.value = "";
+            updateWordsListUI();
+            generateGraph();
+        }
+
+        addBtn.addEventListener("click", handleAddWord);
+        wordInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter") {
+                handleAddWord();
+            }
+        });
+
+        clearAllBtn.addEventListener("click", () => {
+            userWords = [];
+            updateWordsListUI();
+            generateGraph();
+        });
+
+        // Fonction de téléchargement PNG
+        downloadPngBtn.addEventListener("click", () => {
+            if (userWords.length === 0) return;
+
+            draw();
+
+            const link = document.createElement("a");
+            link.download = "reseau-mots-connectes.png";
+            link.href = canvas.toDataURL("image/png");
+            link.click();
+        });
+
+        function getNodeAtPosition(x, y) {
+            return nodes.find((node) => {
+                const dx = node.x - x;
+                const dy = node.y - y;
+                return Math.sqrt(dx * dx + dy * dy) <= node.radius;
+            });
+        }
+
+        canvas.addEventListener("mousedown", (e) => {
+            const rect = canvas.getBoundingClientRect();
+            draggedNode = getNodeAtPosition(
+                e.clientX - rect.left,
+                e.clientY - rect.top,
+            );
+            if (draggedNode) {
+                isDragging = true;
+                startSimulation();
+            }
+        });
+
+        canvas.addEventListener("mousemove", (e) => {
+            if (!isDragging || !draggedNode) return;
+            const rect = canvas.getBoundingClientRect();
+            draggedNode.x = e.clientX - rect.left;
+            draggedNode.y = e.clientY - rect.top;
+            draggedNode.vx = 0;
+            draggedNode.vy = 0;
+            draw();
+        });
+
+        window.addEventListener("mouseup", () => {
+            isDragging = false;
+            draggedNode = null;
+        });
+
+        canvas.addEventListener("touchstart", (e) => {
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            draggedNode = getNodeAtPosition(
+                touch.clientX - rect.left,
+                touch.clientY - rect.top,
+            );
+            if (draggedNode) {
+                isDragging = true;
+                startSimulation();
+            }
+        });
+
+        canvas.addEventListener("touchmove", (e) => {
+            if (!isDragging || !draggedNode) return;
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            draggedNode.x = touch.clientX - rect.left;
+            draggedNode.y = touch.clientY - rect.top;
+            draggedNode.vx = 0;
+            draggedNode.vy = 0;
+            draw();
+            e.preventDefault();
+        });
+
+        window.addEventListener("touchend", () => {
+            isDragging = false;
+            draggedNode = null;
+        });
+
+        window.addEventListener("resize", () => {
+            if (userWords.length > 0) generateGraph();
+        });
+
+        updateWordsListUI();
+        generateGraph();
+    });
+</script>
