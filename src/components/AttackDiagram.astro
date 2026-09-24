@@ -1,72 +1,36 @@
 <div
     class="w-full max-w-4xl mx-auto p-6 bg-white text-slate-800 rounded-xl border border-slate-200 shadow-lg font-sans relative overflow-hidden min-w-full"
 >
-    <!-- Header -->
-    <div
-        class="relative z-10 flex flex-wrap items-center justify-between gap-4 pb-5 mb-6 border-b border-slate-100"
-    >
-        <div>
-            <div class="flex items-center gap-2 mb-1.5">
-                <span class="relative flex h-2 w-2">
-                    <span
-                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-400 opacity-75"
-                    ></span>
-                    <span
-                        class="relative inline-flex rounded-full h-2 w-2 bg-rose-500"
-                    ></span>
-                </span>
-                <span
-                    class="text-xs font-mono text-rose-600 tracking-wide uppercase font-semibold"
-                >
-                    BMW ConnectedDrive · Étude de vulnérabilité (2015)
-                </span>
-            </div>
-            <h3 class="text-xl font-bold tracking-tight text-slate-900">
-                Attaque Man-in-the-Middle (MitM) & Imitation de Serveur
-            </h3>
-        </div>
+    <p class="relative z-10 mb-4 text-center text-sm text-slate-500">
+        Cliquez sur une étape pour découvrir le déroulé de l'attaque.
+    </p>
 
-        <div class="flex items-center gap-2.5">
-            <button
-                id="btn-autoplay"
-                class="px-3 py-1.5 text-xs font-mono rounded-md bg-slate-100 border border-slate-200 text-slate-700 hover:bg-slate-200 hover:text-slate-900 transition-all flex items-center gap-2"
+    <!-- Boutons de navigation par étapes -->
+    <div class="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-2 mb-6">
+        <button data-step="1" class="step-btn">
+            <span class="block text-[10px] text-slate-400 font-mono mb-0.5"
+                >01</span
             >
-                <span id="play-icon">▶</span>
-                <span id="play-text">Lecture auto</span>
-            </button>
-            <span
-                id="status-badge"
-                class="px-3 py-1.5 text-xs font-mono rounded-md bg-slate-50 text-slate-600 border border-slate-200"
+            Requête initiale
+        </button>
+        <button data-step="2" class="step-btn">
+            <span class="block text-[10px] text-slate-400 font-mono mb-0.5"
+                >02</span
             >
-                Étape 1/4
-            </span>
-        </div>
-    </div>
-    <!-- Terminal de log -->
-    <div
-        class="mb-5 relative z-10 mt-4 p-3.5 rounded-lg bg-slate-900 text-slate-100 border border-slate-800 font-mono text-xs shadow-inner"
-    >
-        <div
-            class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2.5 text-slate-400"
-        >
-            <div class="flex items-center gap-1.5">
-                <span class="w-2 h-2 rounded-full bg-slate-700"></span>
-                <span class="w-2 h-2 rounded-full bg-slate-700"></span>
-                <span class="w-2 h-2 rounded-full bg-slate-700"></span>
-                <span class="ml-1.5 text-slate-400 text-[11px]"
-                    >sec_analysis.log</span
-                >
-            </div>
-            <span id="log-step-tag" class="text-slate-400 text-[10px]"
-                >01_INIT</span
+            Faux certificat
+        </button>
+        <button data-step="3" class="step-btn">
+            <span class="block text-[10px] text-slate-400 font-mono mb-0.5"
+                >03</span
             >
-        </div>
-        <p
-            id="log-output"
-            class="text-slate-200 min-h-[2.5rem] flex items-center text-[15px] transition-opacity duration-200"
-        >
-            Sélectionnez une étape pour analyser le flux d'attaque.
-        </p>
+            Chemin contourné
+        </button>
+        <button data-step="4" class="step-btn">
+            <span class="block text-[10px] text-slate-400 font-mono mb-0.5"
+                >04</span
+            >
+            Commande injectée
+        </button>
     </div>
     <!-- Schéma interactif avec grille alignée à 5 colonnes (Blocs + Connecteurs) -->
     <div
@@ -210,32 +174,31 @@
         </div>
     </div>
 
-    <!-- Boutons de navigation par étapes -->
-    <div class="relative z-10 grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
-        <button data-step="1" class="step-btn">
-            <span class="block text-[10px] text-slate-400 font-mono mb-0.5"
-                >01</span
+    <!-- Commentaire de l'étape sélectionnée -->
+    <div
+        class="relative z-10 mt-5 p-3.5 rounded-lg bg-slate-900 text-slate-100 border border-slate-800 font-mono text-xs shadow-inner"
+    >
+        <div
+            class="flex items-center justify-between border-b border-slate-800 pb-2 mb-2.5 text-slate-400"
+        >
+            <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-slate-700"></span>
+                <span class="w-2 h-2 rounded-full bg-slate-700"></span>
+                <span class="w-2 h-2 rounded-full bg-slate-700"></span>
+                <span class="ml-1.5 text-slate-400 text-[11px]"
+                    >sec_analysis.log</span
+                >
+            </div>
+            <span id="log-step-tag" class="text-slate-400 text-[10px]"
+                >EN ATTENTE</span
             >
-            Requête Initiale
-        </button>
-        <button data-step="2" class="step-btn">
-            <span class="block text-[10px] text-slate-400 font-mono mb-0.5"
-                >02</span
-            >
-            Faux Certificat
-        </button>
-        <button data-step="3" class="step-btn">
-            <span class="block text-[10px] text-slate-400 font-mono mb-0.5"
-                >03</span
-            >
-            Chemin Contourné
-        </button>
-        <button data-step="4" class="step-btn">
-            <span class="block text-[10px] text-slate-400 font-mono mb-0.5"
-                >04</span
-            >
-            Commande Injectée
-        </button>
+        </div>
+        <p
+            id="log-output"
+            class="text-slate-200 min-h-[2.5rem] flex items-center text-[15px] transition-opacity duration-200"
+        >
+            Sélectionnez une étape pour analyser le flux d'attaque.
+        </p>
     </div>
 </div>
 
@@ -262,6 +225,10 @@
         cursor: pointer;
     }
 
+    .step-btn:first-child:not(.active) {
+        animation: guide-pulse 1.8s ease-in-out infinite;
+    }
+
     .step-btn:hover {
         background-color: rgb(241, 245, 249);
         color: rgb(15, 23, 42);
@@ -272,6 +239,16 @@
         background-color: rgba(37, 99, 235, 0.08);
         border-color: rgba(37, 99, 235, 0.3);
         color: rgb(29, 78, 216);
+    }
+
+    @keyframes guide-pulse {
+        0%,
+        100% {
+            box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.18);
+        }
+        50% {
+            box-shadow: 0 0 0 5px rgba(37, 99, 235, 0.08);
+        }
     }
 
     .line-active {
@@ -382,7 +359,7 @@
             carBadgeStyle:
                 "bg-rose-50 text-rose-700 border-rose-200 font-semibold",
             lineCarAttacker: "line-danger-reverse",
-            
+
             carIconStyle: "bg-rose-50 border-rose-200 text-rose-600",
             attackerSub: "Envoi payload malveillant",
             attackerCardStyle: "border-rose-300 bg-rose-50/40 shadow-sm",
@@ -393,13 +370,11 @@
         },
     ];
 
-    let currentStep = 1;
-    let autoplayInterval: NodeJS.Timeout | null = null;
+    let currentStep = 0;
 
     const buttons = document.querySelectorAll<HTMLButtonElement>(".step-btn");
     const logOutput = document.getElementById("log-output");
     const logStepTag = document.getElementById("log-step-tag");
-    const statusBadge = document.getElementById("status-badge");
     const carState = document.getElementById("car-state");
     const carIconContainer = document.getElementById("car-icon-container");
     const lineCarAttacker = document.getElementById("line-car-attacker");
@@ -409,9 +384,6 @@
     const serverCard = document.getElementById("node-server-card");
     const serverSub = document.getElementById("server-subtext");
     const serverTitle = document.getElementById("server-title");
-    const btnAutoplay = document.getElementById("btn-autoplay");
-    const playIcon = document.getElementById("play-icon");
-    const playText = document.getElementById("play-text");
 
     function setStep(stepNumber: number) {
         currentStep = stepNumber;
@@ -432,8 +404,6 @@
         }
 
         if (logStepTag) logStepTag.textContent = data.tag;
-        if (statusBadge) statusBadge.textContent = data.badge;
-
         if (carState) {
             carState.textContent = data.carText;
             carState.className = `inline-block mt-2 px-2 py-0.5 rounded text-[11px] font-mono border transition-all ${data.carBadgeStyle}`;
@@ -463,32 +433,10 @@
             );
     }
 
-    function toggleAutoplay() {
-        if (autoplayInterval) {
-            clearInterval(autoplayInterval);
-            autoplayInterval = null;
-            if (playIcon) playIcon.textContent = "▶";
-            if (playText) playText.textContent = "Lecture auto";
-            if (btnAutoplay) btnAutoplay.classList.remove("bg-slate-200");
-        } else {
-            if (playIcon) playIcon.textContent = "⏸";
-            if (playText) playText.textContent = "Pause";
-            if (btnAutoplay) btnAutoplay.classList.add("bg-slate-200");
-            autoplayInterval = setInterval(() => {
-                const nextStep = (currentStep % steps.length) + 1;
-                setStep(nextStep);
-            }, 7000);
-        }
-    }
-
     buttons.forEach((btn) => {
         btn.addEventListener("click", () => {
-            if (autoplayInterval) toggleAutoplay();
             const step = Number(btn.getAttribute("data-step"));
             setStep(step);
         });
     });
-
-    btnAutoplay?.addEventListener("click", toggleAutoplay);
-    setStep(1);
 </script>

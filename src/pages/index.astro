@@ -2,58 +2,52 @@
 import Layout from "../layouts/Layout.astro";
 import AttackDiagram from "../components/AttackDiagram.astro";
 import FlipCardGrid from "../components/FlipCardGrid.astro";
-import type { FlipCard } from "../components/FlipCardGrid.astro";
+import GlossaryCards from "../components/GlossaryCards.astro";
+import GlossaryTerm from "../components/GlossaryTerm.astro";
 
-const toyotaCards: FlipCard[] = [
+const toyotaSteps = [
 	{
-		type: "glossaire",
-		front: "Bus CAN",
-		back: "Le réseau électronique interne qui relie les composants d'une voiture entre eux (moteur, phares, portières...) et leur permet de communiquer.",
-	},
-	{
-		type: "glossaire",
-		front: "Injection (CAN injection)",
-		back: "Le fait d'envoyer un faux message sur ce réseau pour faire croire aux autres composants qu'il est légitime.",
-	},
-	{
-		type: "glossaire",
-		front: "Immobiliseur",
-		back: "Le système qui empêche normalement le moteur de démarrer sans la vraie clé.",
-	},
-	{
-		type: "glossaire",
-		front: "Authentification",
-		back: "La vérification qu'un message provient bien de l'expéditeur qu'il prétend être — absente sur le bus CAN classique, ce qui rend l'injection possible.",
-	},
-	{
-		type: "etape",
 		step: 1,
-		front: "Étape 1",
-		back: "Le voleur débranche le câblage derrière le phare pour atteindre le bus CAN.",
+		text: "Le voleur débranche le câblage derrière le phare pour atteindre le bus CAN.",
 	},
 	{
-		type: "etape",
 		step: 2,
-		front: "Étape 2",
-		back: "Un petit boîtier, parfois déguisé en enceinte Bluetooth, est branché sur ce connecteur.",
+		text: "Un petit boîtier, parfois déguisé en enceinte Bluetooth, est branché sur ce connecteur.",
 	},
 	{
-		type: "etape",
 		step: 3,
-		front: "Étape 3",
-		back: "L'appareil envoie un faux message qui imite celui d'une clé légitime.",
+		text: "L'appareil envoie un faux message qui imite celui d'une clé légitime.",
 	},
 	{
-		type: "etape",
 		step: 4,
-		front: "Étape 4",
-		back: "L'immobiliseur accepte le message et désactive la protection du véhicule.",
+		text: "L'immobiliseur accepte le message et désactive la protection du véhicule.",
 	},
 	{
-		type: "etape",
 		step: 5,
-		front: "Étape 5",
-		back: "Le moteur démarre, sans qu'aucune vraie clé n'ait été utilisée.",
+		text: "Le moteur démarre, sans qu'aucune vraie clé n'ait été utilisée.",
+	},
+];
+
+const toyotaGlossary = [
+	{
+		term: "Bus CAN",
+		definition:
+			"Le réseau électronique interne qui relie les composants d'une voiture entre eux (moteur, phares, portières...) et leur permet de communiquer.",
+	},
+	{
+		term: "Injection (CAN injection)",
+		definition:
+			"Le fait d'envoyer un faux message sur ce réseau pour faire croire aux autres composants qu'il est légitime.",
+	},
+	{
+		term: "Immobiliseur",
+		definition:
+			"Le système qui empêche normalement le moteur de démarrer sans la vraie clé.",
+	},
+	{
+		term: "Authentification",
+		definition:
+			"La vérification qu'un message provient bien de l'expéditeur qu'il prétend être — absente sur le bus CAN classique, ce qui rend l'injection possible.",
 	},
 ];
 import NuageMots from "../components/NuageMots.astro";
@@ -74,79 +68,319 @@ import BMWLogo from "../assets/image16.svg";
 		class="w-full min-h-screen bg-[#effbfe] text-[#071a27] font-sans antialiased"
 	>
 		<main
-			class="max-w-280 mx-auto pt-[54px] pr-[92px] pb-[160px] pl-[30px] [@media(max-width:768px)]:p-4 [@media(max-width:768px)]:pb-[90px]"
+			class="w-full max-w-[100%] pt-[54px] pr-[0px] pb-[160px] pl-[0px] [@media(max-width:800px)]:p-4 [@media(max-width:800px)]:pb-[80px] flex flex-col items-stretch justify-center"
 		>
 			<!-- HERO / INTRODUCTION -->
-			<section class="max-w-[970px] scroll-mt-7" id="introduction">
-				<div
-					class="mb-[7px] text-[#079bcf] text-[12px] font-bold tracking-[0.14em] uppercase"
-				>
-					Parcours d’acculturation à la cybersécurité
+			<section
+				class="scroll-mt-7 flex flex-col align-bottom gap-20"
+				id="introduction"
+			>
+				<div class="flex flex-col gap-5 w-[100%]">
+					<h1
+						class="mb-[11px] text-[#071923] text-[clamp(38px,5vw,66px)] leading-[1] tracking-[-0.065em] font-bold"
+					>
+						De la cybersécurité pour les véhicules, ça existe
+						vraiment ?
+					</h1>
+					<p class="text-[#39505b] text-[20px] leading-[1.68] m-0">
+						Les enjeux de la <GlossaryTerm
+							term="cybersécurité"
+							definition="L'ensemble des méthodes pour protéger les appareils, les réseaux et les informations contre les attaques."
+						/> sont aujourd’hui partout : dans nos usages, nos outils
+						et les services que nous utilisons chaque jour. Ce parcours
+						propose une lecture simple et concrète de situations réelles
+						pour mieux reconnaître les risques, adopter les bons réflexes
+						et protéger les données qui comptent. <strong
+							>Plus un véhicule est connecté plus il est sensible
+							à l'hacking</strong
+						>
+					</p>
 				</div>
-				<h1
-					class="mb-[11px] text-[#071923] text-[clamp(38px,5vw,66px)] leading-[0.96] tracking-[-0.065em] font-bold"
-				>
-					Introduction
-				</h1>
-				<p
-					class="max-w-[900px] text-[#39505b] text-[20px] leading-[1.68] m-0"
-				>
-					Les enjeux de la cybersécurité sont aujourd’hui partout :
-					dans nos usages, nos outils et les services que nous
-					utilisons chaque jour. Ce parcours propose une lecture
-					simple et concrète de situations réelles pour mieux
-					reconnaître les risques, adopter les bons réflexes et
-					protéger les données qui comptent.
-				</p>
-
-				<figure
-					class="w-full max-w-[915px] my-[28px] mx-0 mb-[100px] py-[28px] px-[33px] pb-[16px] rounded-[14px] bg-[rgba(255,255,255,0.84)] border border-[rgba(157,210,225,0.6)] shadow-[0_17px_32px_rgba(79,156,178,0.12),0_2px_7px_rgba(62,123,141,0.08)]"
-				>
-					<div
-						class="overflow-hidden aspect-[16/8.5] bg-[#061521] border-[8px] border-[#09121a] shadow-[0_4px_0_rgba(2,13,21,0.35)]"
+				<div>
+					<figure
+						class="w-[70%] mb-[100px] display-block middle m-auto"
 					>
-						<video
-							class="block w-full h-full object-cover"
-							src="https://api.preview.4hfactory.tech/storage/companies/2_6BZLRA9PU5/1486_XB5J2PAIOL/7320_19GEQTXSKH.webm"
-							controls
-							playsinline
-							preload="metadata"
-							aria-label="Vidéo d’introduction au parcours"
-						></video>
-					</div>
-					<figcaption
-						class="mt-3 text-[#7d969f] text-[9px] text-center"
-					>
-						Regarder la vidéo d’introduction
-					</figcaption>
-				</figure>
+						<div
+							class="overflow-hidden aspect-[16/8.5] bg-[#061521] border-[4px]"
+						>
+							<video
+								class="block w-full h-full object-cover"
+								src="https://api.preview.4hfactory.tech/storage/companies/2_6BZLRA9PU5/1486_XB5J2PAIOL/7320_19GEQTXSKH.webm"
+								controls
+								playsinline
+								preload="metadata"
+								aria-label="Vidéo d’introduction au parcours"
+							></video>
+						</div>
+					</figure>
+				</div>
 			</section>
 
-			<!-- CAS 1 -->
-			<section class="max-w-247.5 mb-29 scroll-mt-7" id="cas-1">
-				<div class="flex mb-2 gap-7 align-items-bottom flex-column">
+			<!-- CAS 4 -->
+			<section class="mb-[116px] scroll-mt-7" id="cas-4">
+				<div
+					class="flex mb-5 gap-7 flex-column display-flex display-blockalign-baseline"
+				>
 					<h2
 						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
 					>
-						01 - STARLINK <em class="text-[#1b70d3] not-italic"
+						01 - CAN VIA PHARE <em class="text-[#1b70d3] not-italic"
+							>Toyota Lexus</em
+						>
+					</h2>
+					<p
+						class="text-[#08a1d4] text-[20px] mt-1 font-(Segoe UI) font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
+					>
+						2023
+					</p>
+				</div>
+				<p
+					class="mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
+				>
+					En 2023, un vol de véhicule a mis en lumière une méthode
+					inédite : l’<GlossaryTerm
+						term="injection"
+						definition="L'envoi d'un faux message dans un réseau pour tromper les autres appareils."
+					/> de messages sur le <GlossaryTerm
+						term="réseau CAN"
+						definition="Le réseau électronique qui permet aux équipements d'une voiture de communiquer entre eux."
+					/> via le connecteur d’un phare. Cette attaque permet de contourner
+					la protection <GlossaryTerm
+						term="antidémarrage"
+						definition="Le système qui empêche le moteur de démarrer sans la bonne clé."
+					/> et de déverrouiller les portes sans la clé.
+				</p>
+				<FlipCardGrid steps={toyotaSteps} />
+
+				<GlossaryCards terms={toyotaGlossary} />
+
+				<div
+					class="mt-0 border-l-4 border-[#08a1d4] bg-white px-6 py-5 shadow-[0_10px_25px_rgba(11,40,80,0.05)] rounded-2xl"
+				>
+					<h3
+						class="m-0 text-[#081924] text-[clamp(22px,2.4vw,32px)] leading-[1.15] font-bold"
+					>
+						À retenir
+					</h3>
+					<ul
+						class="mt-3 mb-0 pl-5 text-[#46606b] text-[17px] leading-[1.6]"
+					>
+						<li>
+							C’est fou ce qu’on peut faire en piratant un élément
+							aussi secondaire qu’un simple phare !
+						</li>
+						<li>
+							Avant que les véhicules ne deviennent de plus en
+							plus connectés, pirater une voiture nécessitait
+							généralement une intrusion physique, comme dans
+							cette attaque. Mais ça, c’était le monde d’avant.
+						</li>
+					</ul>
+				</div>
+			</section>
+
+			<!-- CAS 3 -->
+			<section class="mb-[130px] scroll-mt-7" id="cas-3">
+				<div class="flex mb-5 gap-7 flex-column">
+					<h2
+						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
+					>
+						02 - CLONAGE DE CLÉ <em
+							class="text-[#1b70d3] not-italic">Tesla Model S</em
+						>
+					</h2>
+					<p
+						class="text-[#08a1d4] text-[20px] mt-1 font-(Segoe UI) font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
+					>
+						2018
+					</p>
+				</div>
+				<p
+					class="mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
+				>
+					En 2018, des chercheurs belges ont mis en évidence une
+					faiblesse permettant de <GlossaryTerm
+						term="cloner"
+						definition="Créer une copie qui ressemble et fonctionne comme l'original."
+					/> une clé de véhicule. Une clé ou un smartphone peut alors devenir
+					un <GlossaryTerm
+						term="point d'accès"
+						definition="Un moyen d'entrer dans un appareil ou un réseau."
+					/> au véhicule.
+				</p>
+				<p class="mb-4 text-[#0879ae] text-[17px] font-bold">
+					Répondez aux questions ci-dessous pour en découvrir plus.
+				</p>
+
+				<Quiz />
+
+				<div
+					class="mt-10 border-l-4 border-[#08a1d4] bg-white px-6 py-5 shadow-[0_10px_25px_rgba(11,40,80,0.05)] rounded-2xl"
+				>
+					<h3
+						class="m-0 text-[#081924] text-[clamp(22px,2.4vw,32px)] leading-[1.15] font-bold"
+					>
+						À retenir
+					</h3>
+					<p
+						class="mt-3 mb-0 text-[#46606b] text-[17px] leading-[1.6]"
+					>
+						Aujourd'hui, même nos clés et nos smartphones
+						communiquent avec le véhicule. Avec autant d'accès
+						différents, un hacker a l'embarras du choix pour tenter
+						de le pirater.
+					</p>
+				</div>
+			</section>
+
+			<!-- CAS 2 -->
+			<section class="mb-[116px] scroll-mt-7" id="cas-2">
+				<div class="flex mb-5 gap-7 flex-column">
+					<h2
+						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
+					>
+						03 - HOMME DU MILIEU <em
+							class="text-[#1b70d3] not-italic">BMW</em
+						>
+					</h2>
+					<p
+						class="text-[#08a1d4] text-[20px] mt-1 font-(Segoe UI) font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
+					>
+						2015
+					</p>
+				</div>
+				<p
+					class="mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
+				>
+					Deux chercheurs en sécurité ont découvert une <GlossaryTerm
+						term="faille"
+						definition="Une faiblesse dans un système qu'une personne malveillante peut exploiter."
+					/> dans le service connecté d’un constructeur automobile. Cette
+					démonstration permet de comprendre comment une fonctionnalité
+					pratique peut devenir un <GlossaryTerm
+						term="vecteur d'exposition"
+						definition="Un moyen par lequel une information ou un système peut être exposé à un risque."
+					/>
+					lorsqu’elle n’est pas suffisamment protégée.
+				</p>
+				<p class="mb-4 text-[#0879ae] text-[17px] font-bold">
+					Explorez le scénario ci-dessous.
+				</p>
+
+				<AttackDiagram />
+				<div
+					class="mt-10 border-l-4 border-[#08a1d4] bg-white px-6 py-5 shadow-[0_10px_25px_rgba(11,40,80,0.05)] rounded-2xl"
+				>
+					<h3
+						class="m-0 text-[#081924] text-[clamp(22px,2.4vw,32px)] leading-[1.15] font-bold"
+					>
+						À retenir
+					</h3>
+					<p
+						class="mt-3 mb-0 text-[#46606b] text-[17px] leading-[1.6]"
+					>
+						Plus les véhicules sont connectés, plus le risque d'<GlossaryTerm
+							term="usurpation d'identité"
+							definition="Le fait de se faire passer pour une autre personne ou un autre appareil."
+						/> augmente. Il est donc essentiel de pouvoir vérifier l'identité
+						des véhicules et des systèmes avec lesquels ils communiquent.
+					</p>
+				</div>
+				<!-- BLOCS MÉTRIQUES CAS 2 -->
+				<h3
+					class="mt-12 mb-4 text-[#081924] text-[clamp(22px,2.4vw,32px)] leading-[1.15] font-bold"
+				>
+					Les chiffres clés
+				</h3>
+				<div class="grid grid-cols-1 md:grid-cols-3 gap-5 mx-auto">
+					<div
+						class="min-h-[150px] flex flex-col items-center justify-center p-6 rounded-[20px] bg-white border border-[rgba(157,210,225,0.6)] shadow-[0_17px_32px_rgba(79,156,178,0.12),0_2px_7px_rgba(62,123,141,0.08)] text-center transition-transform"
+					>
+						<strong
+							id="vehicle-counter"
+							class="text-[#3680d7] text-[42px] font-extrabold leading-none"
+							data-target="2200000">0</strong
+						>
+						<span
+							class="mt-2 text-[#1768b8] text-[17px] font-extrabold"
+							>véhicules concernés par la faille</span
+						>
+					</div>
+
+					<div
+						class="min-h-[150px] flex flex-col items-center justify-center p-6 rounded-[20px] bg-white border border-[rgba(157,210,225,0.6)] shadow-[0_17px_32px_rgba(79,156,178,0.12),0_2px_7px_rgba(62,123,141,0.08)] text-center transition-transform"
+					>
+						<span
+							class="text-[#3680d7] text-[18px] font-extrabold tracking-[0.05em] mb-4 uppercase"
+							>3 marques concernées par la faille</span
+						>
+						<div
+							class="flex justify-center items-center justify-between gap-6"
+						>
+							<img
+								src={RollsRoyceLogo.src}
+								alt="Rolls-Royce"
+								class="h-13 w-auto object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
+							/>
+							<img
+								src={MiniLogo.src}
+								alt="MINI"
+								class="h-13 w-auto object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
+							/>
+							<img
+								src={BMWLogo.src}
+								alt="BMW"
+								class="h-13 w-auto object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
+							/>
+						</div>
+					</div>
+
+					<div
+						class="min-h-[150px] flex flex-col items-center justify-center p-6 rounded-[20px] bg-white border border-[rgba(157,210,225,0.6)] shadow-[0_17px_32px_rgba(79,156,178,0.12),0_2px_7px_rgba(62,123,141,0.08)] text-center transition-transform"
+					>
+						<strong
+							id="hack-time-counter"
+							class="text-[#d75f36] text-[42px] font-extrabold leading-none"
+							data-target="10">0</strong
+						>
+						<span
+							class="mt-2 text-[#b84f17] text-[17px] font-extrabold"
+							>minutes environ pour déverrouiller le véhicule</span
+						>
+					</div>
+				</div>
+			</section>
+
+			<!-- CAS 1 -->
+			<section class="mb-29 scroll-mt-7" id="cas-1">
+				<div class="flex mb-5 gap-7 align-items-bottom flex-column">
+					<h2
+						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
+					>
+						04 - STARLINK <em class="text-[#1b70d3] not-italic"
 							>Subaru</em
 						>
 					</h2>
 					<p
-						class="text-[#08a1d4] text-[18px] font-(Segoe UI) font-bold tracking-[0.13em] uppercase border-2 border-[#08a1d4] rounded-[50px] pt-1 pb-1 pl-2 pr-2 text-center"
+						class="text-[#08a1d4] text-[20px] mt-1 font-(Segoe UI) font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
 					>
 						2025
 					</p>
 				</div>
 
 				<p
-					class="max-w-[900px] mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
+					class="mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
 				>
 					Dans ce premier cas, nous allons observer comment un service
-					connecté peut exposer des informations sensibles. En
-					comprenant le chemin parcouru par une donnée, il devient
-					plus facile d’identifier les points de vigilance et de
-					limiter la surface d’exposition.
+					connecté peut exposer des <GlossaryTerm
+						term="informations sensibles"
+						definition="Des informations privées dont la divulgation peut causer un problème."
+					/>. En comprenant le chemin parcouru par une donnée, il
+					devient plus facile d’identifier les points de vigilance et
+					de limiter la <GlossaryTerm
+						term="surface d'exposition"
+						definition="L'ensemble des points par lesquels un système peut être attaqué."
+					/>.
 				</p>
 				<p class="mb-4 text-[#0879ae] text-[17px] font-bold">
 					Entrez dans la peau de l’attaquant : lancez la simulation et
@@ -154,7 +388,30 @@ import BMWLogo from "../assets/image16.svg";
 				</p>
 
 				<Starlink />
-
+				<div
+					class="mt-5 border-l-4 border-[#08a1d4] bg-white px-6 py-5 shadow-[0_10px_25px_rgba(11,40,80,0.05)] rounded-2xl"
+				>
+					<p
+						class="m-0 text-[#081924] text-[18px] leading-[1.55] font-bold"
+					>
+						À retenir
+					</p>
+					<ul
+						class="mt-3 mb-0 pl-5 text-[#46606b] text-[17px] leading-[1.6]"
+					>
+						<li>
+							Hacker un véhicule peut aujourd'hui se faire depuis
+							le canapé de son salon, sans même sortir de chez
+							soi.
+						</li>
+						<li>
+							Hacker un véhicule, ce n'est pas uniquement le
+							prendre en contrôle ou l'ouvrir pour le voler : il
+							contient aussi des informations sensibles qu'il est
+							essentiel de protéger.
+						</li>
+					</ul>
+				</div>
 				<!-- GRILLE DES STATS ET VIDÉO -->
 				<div
 					class="grid grid-cols-2 gap-6 mt-8 [@media(max-width:768px)]:grid-cols-1"
@@ -171,9 +428,14 @@ import BMWLogo from "../assets/image16.svg";
 								>
 								<span
 									class="text-[14px] font-extrabold text-black tracking-[0.08em]"
-									>MÈTRES DE LOCALISATION PRÉCISE</span
+									>MÉTRES DE PRÉCISION DE LOCALISATION</span
 								>
 							</div>
+							<p
+								class="m-0 text-[#46606b] text-[15px] leading-[1.4]"
+							>
+								Le véhicule peut être localisé à 5 mètres près.
+							</p>
 							<div
 								class="flex items-center justify-between pt-[10px] px-[10px] pb-0"
 							>
@@ -274,9 +536,9 @@ import BMWLogo from "../assets/image16.svg";
 									>
 								</div>
 								<div
-									class="w-auto justify-center text-blue-600 text-[11px] font-extrabold font-['Inter'] uppercase"
+									class="w-auto justify-center text-blue-600 text-[11px] font-extrabold font-['Inter'] uppercase leading-[1.5]"
 								>
-									nom + code postal, email, ou plaque
+									nom, code postal, e-mail ou plaque
 									d'immatriculation
 								</div>
 							</div>
@@ -284,186 +546,29 @@ import BMWLogo from "../assets/image16.svg";
 					</div>
 
 					<!-- CARTE VIDÉO DEMO -->
-					<div
-						class="bg-white rounded-[20px] p-4 shadow-[0_10px_25px_rgba(11,40,80,0.05)] flex flex-col justify-between"
-					>
+					<div class="flex flex-col gap-4">
 						<div
-							class="w-full aspect-[16/9] rounded-xl overflow-hidden bg-black"
+							class="bg-white rounded-[20px] p-4 shadow-[0_10px_25px_rgba(11,40,80,0.05)] flex flex-col justify-between"
 						>
-							<iframe
-								class="w-full h-full border-0"
-								src="https://www.youtube.com/embed/0i8juy6RPBI?si=LSWO_fELUqUtbnr9"
-								title="Démo Subaru"
-								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-								allowfullscreen></iframe>
-						</div>
-						<figcaption
-							class="mt-[14px] text-[14px] text-[#7288a2] text-center leading-[1.4]"
-						>
-							Prise de contrôle d’une Subaru en utilisant la
-							plaque d’immatriculation en environ 10 secondes
-						</figcaption>
-					</div>
-				</div>
-			</section>
-
-			<!-- CAS 2 -->
-			<section class="max-w-[990px] mb-[116px] scroll-mt-7" id="cas-2">
-				<div class="flex mb-2 gap-7 flex-column">
-					<h2
-						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
-					>
-						02 - HOMME DU MILIEU <em
-							class="text-[#1b70d3] not-italic">BMW</em
-						>
-					</h2>
-					<p
-						class="text-[#08a1d4] text-[15px] font-(Segoe UI) font-bold tracking-[0.13em] uppercase mb-5 border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
-					>
-						2015
-					</p>
-				</div>
-				<p
-					class="max-w-[900px] mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
-				>
-					Deux chercheurs en sécurité ont découvert une faille dans le
-					service connecté d’un constructeur automobile. Cette
-					démonstration permet de comprendre comment une
-					fonctionnalité pratique peut devenir un vecteur d’exposition
-					lorsqu’elle n’est pas suffisamment protégée.
-				</p>
-				<p class="mb-4 text-[#0879ae] text-[17px] font-bold">
-					Explorez le scénario puis retenez une idée essentielle : une
-					donnée utile doit aussi rester maîtrisée.
-				</p>
-
-				<AttackDiagram />
-
-				<!-- BLOCS MÉTRIQUES CAS 2 -->
-				<div
-					class="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-[960px] mx-auto mt-10"
-				>
-					<div
-						class="min-h-[150px] flex flex-col items-center justify-center p-6 rounded-[20px] bg-white border border-[rgba(157,210,225,0.6)] shadow-[0_17px_32px_rgba(79,156,178,0.12),0_2px_7px_rgba(62,123,141,0.08)] text-center transition-transform"
-					>
-						<strong
-							id="vehicle-counter"
-							class="text-[#3680d7] text-[42px] font-extrabold leading-none"
-							data-target="2200000">0</strong
-						>
-						<span
-							class="mt-2 text-[#1768b8] text-[17px] font-extrabold"
-							>de véhicules concernés</span
-						>
-					</div>
-
-					<div
-						class="min-h-[150px] flex flex-col items-center justify-center p-6 rounded-[20px] bg-white border border-[rgba(157,210,225,0.6)] shadow-[0_17px_32px_rgba(79,156,178,0.12),0_2px_7px_rgba(62,123,141,0.08)] text-center transition-transform"
-					>
-						<span
-							class="text-[#3680d7] text-[18px] font-extrabold tracking-[0.05em] mb-4 uppercase"
-							>3 marques concernées</span
-						>
-						<div
-							class="flex justify-center items-center justify-between gap-6"
-						>
-							<img
-								src={RollsRoyceLogo.src}
-								alt="Rolls-Royce"
-								class="h-13 w-auto object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
-							/>
-							<img
-								src={MiniLogo.src}
-								alt="MINI"
-								class="h-13 w-auto object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
-							/>
-							<img
-								src={BMWLogo.src}
-								alt="BMW"
-								class="h-13 w-auto object-contain drop-shadow-[0_1px_2px_rgba(0,0,0,0.15)]"
-							/>
+							<div
+								class="w-full aspect-[16/9] rounded-xl overflow-hidden bg-black"
+							>
+								<iframe
+									class="w-full h-full border-0"
+									src="https://www.youtube.com/embed/0i8juy6RPBI?si=LSWO_fELUqUtbnr9"
+									title="Démo Subaru"
+									allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+									allowfullscreen></iframe>
+							</div>
+							<figcaption
+								class="mt-[14px] text-[14px] text-[#7288a2] text-center leading-[1.4]"
+							>
+								Prise de contrôle d’une Subaru en utilisant la
+								plaque d’immatriculation en environ 10 secondes
+							</figcaption>
 						</div>
 					</div>
-
-					<div
-						class="min-h-[150px] flex flex-col items-center justify-center p-6 rounded-[20px] bg-white border border-[rgba(157,210,225,0.6)] shadow-[0_17px_32px_rgba(79,156,178,0.12),0_2px_7px_rgba(62,123,141,0.08)] text-center transition-transform"
-					>
-						<strong
-							id="hack-time-counter"
-							class="text-[#d75f36] text-[42px] font-extrabold leading-none"
-							data-target="10">0</strong
-						>
-						<span
-							class="mt-2 text-[#b84f17] text-[17px] font-extrabold"
-							>minutes environ pour déverrouiller</span
-						>
-					</div>
 				</div>
-			</section>
-
-			<!-- CAS 3 -->
-			<section class="max-w-[990px] mb-[130px] scroll-mt-7" id="cas-3">
-				<div class="flex mb-2 gap-7 flex-column">
-					<h2
-						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
-					>
-						03 - CLONAGE DE CLÉ <em
-							class="text-[#1b70d3] not-italic">Tesla Model S</em
-						>
-					</h2>
-					<p
-						class="text-[#08a1d4] text-[15px] font-(Segoe UI) font-bold tracking-[0.13em] uppercase mb-5 border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
-					>
-						2018
-					</p>
-				</div>
-				<p
-					class="max-w-[900px] mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
-				>
-					En 2018, des chercheurs belges ont mis en évidence une
-					faiblesse permettant de cloner une clé de véhicule.
-					L’exemple rappelle qu’un objet physique peut aussi être une
-					interface numérique : la sécurité dépend autant du protocole
-					que de l’usage qui en est fait.
-				</p>
-				<p class="mb-4 text-[#0879ae] text-[17px] font-bold">
-					Selon vous, combien de temps faut-il pour cloner une clé ?
-					Faites votre choix.
-				</p>
-
-				<Quiz />
-			</section>
-
-			<!-- CAS 4 -->
-			<section class="max-w-[990px] mb-[116px] scroll-mt-7" id="cas-4">
-				<div class="flex mb-2 gap-7 flex-column">
-					<h2
-						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
-					>
-						04 - CAN VIA PHARE <em class="text-[#1b70d3] not-italic"
-							>Toyota Lexus</em
-						>
-					</h2>
-					<p
-						class="text-[#08a1d4] text-[15px] font-(Segoe UI) font-bold tracking-[0.13em] uppercase mb-5 border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
-					>
-						2023
-					</p>
-				</div>
-				<p
-					class="max-w-[900px] mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
-				>
-					En 2023, un vol de véhicule a mis en lumière une méthode
-					inédite : l’injection de messages sur le réseau CAN via le
-					connecteur d’un phare. Cette attaque permet de contourner la
-					protection antidémarrage et de déverrouiller les portes sans
-					la clé.
-				</p>
-				<p class="mb-4 text-[#0879ae] text-[17px] font-bold">
-					Observez les différentes étapes de l’attaque ci-dessous.
-				</p>
-
-				<FlipCardGrid cards={toyotaCards} />
 			</section>
 
 			<!-- SYNTHÈSE -->
@@ -610,5 +715,4 @@ import BMWLogo from "../assets/image16.svg";
 			observer.observe(el);
 		}
 	});
-
 </script>

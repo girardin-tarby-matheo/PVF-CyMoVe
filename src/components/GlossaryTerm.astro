@@ -1,0 +1,178 @@
+---
+interface Props {
+    term: string;
+    definition: string;
+}
+
+const { term, definition } = Astro.props;
+const tooltipId = `glossary-${term.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+---
+
+<span class="glossary-term">
+    <button
+        type="button"
+        class="glossary-term__button"
+        aria-describedby={tooltipId}
+        aria-expanded="false"
+        data-glossary-button
+    >
+        {term}
+    </button>
+    <span id={tooltipId} class="glossary-term__bubble" role="tooltip">
+        {definition}
+    </span>
+</span>
+
+<script>
+    function initGlossaryTerms() {
+        document
+            .querySelectorAll<HTMLButtonElement>("[data-glossary-button]")
+            .forEach((button) => {
+                if (button.dataset.glossaryBound) return;
+                button.dataset.glossaryBound = "true";
+
+                button.addEventListener("click", () => {
+                    const isExpanded =
+                        button.getAttribute("aria-expanded") === "true";
+                    const nextIsExpanded = !isExpanded;
+
+                    button.setAttribute(
+                        "aria-expanded",
+                        String(nextIsExpanded),
+                    );
+
+                    if (!nextIsExpanded) {
+                        button.blur();
+                    }
+                });
+            });
+
+        document.addEventListener("click", (event) => {
+            const target = event.target as Node;
+
+            document
+                .querySelectorAll<HTMLButtonElement>(
+                    "[data-glossary-button][aria-expanded='true']",
+                )
+                .forEach((button) => {
+                    if (!button.closest(".glossary-term")?.contains(target)) {
+                        button.setAttribute("aria-expanded", "false");
+                        button.blur();
+                    }
+                });
+        });
+
+        document.addEventListener("keydown", (event) => {
+            if (event.key !== "Escape") return;
+
+            document
+                .querySelectorAll<HTMLButtonElement>(
+                    "[data-glossary-button][aria-expanded='true']",
+                )
+                .forEach((button) => {
+                    button.setAttribute("aria-expanded", "false");
+                    button.blur();
+                });
+        });
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initGlossaryTerms);
+    } else {
+        initGlossaryTerms();
+    }
+
+    document.addEventListener("astro:page-load", initGlossaryTerms);
+</script>
+
+<style>
+    .glossary-term {
+        position: relative;
+        display: inline-block;
+    }
+
+    .glossary-term__button {
+        appearance: none;
+        border: 0;
+        text-decoration: underline;
+        background: transparent;
+        color: #0879ae;
+        cursor: help;
+        font: inherit;
+        font-weight: 700;
+        padding: 0 1px;
+    }
+
+    .glossary-term__button:focus-visible {
+        border-radius: 3px;
+        outline: 3px solid rgba(8, 161, 212, 0.35);
+        outline-offset: 2px;
+    }
+
+    .glossary-term__bubble {
+        position: absolute;
+        z-index: 10;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        width: min(280px, 75vw);
+        padding: 10px 12px;
+        border: 1px solid #a9dce9;
+        border-radius: 8px;
+        background: #ffffff;
+        box-shadow: 0 8px 20px rgba(11, 40, 80, 0.14);
+        color: #183846;
+        font-size: 0.88em;
+        font-weight: 400;
+        line-height: 1.4;
+        opacity: 0;
+        pointer-events: none;
+        transform: translate(-50%, 5px);
+        transition:
+            opacity 160ms ease,
+            transform 160ms ease;
+    }
+
+    .glossary-term__bubble::after {
+        content: "";
+        position: absolute;
+        bottom: -6px;
+        left: 50%;
+        width: 10px;
+        height: 10px;
+        border-right: 1px solid #a9dce9;
+        border-bottom: 1px solid #a9dce9;
+        background: #ffffff;
+        transform: translateX(-50%) rotate(45deg);
+    }
+
+    .glossary-term:hover .glossary-term__bubble,
+    .glossary-term:focus-within .glossary-term__bubble,
+    .glossary-term__button[aria-expanded="true"] + .glossary-term__bubble {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translate(-50%, 0);
+    }
+
+    @media (max-width: 600px) {
+        .glossary-term__bubble {
+            left: 0;
+            transform: translate(0, 5px);
+        }
+
+        .glossary-term__bubble::after {
+            left: 24px;
+        }
+
+        .glossary-term:hover .glossary-term__bubble,
+        .glossary-term:focus-within .glossary-term__bubble,
+        .glossary-term__button[aria-expanded="true"] + .glossary-term__bubble {
+            transform: translate(0, 0);
+        }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .glossary-term__bubble {
+            transition: none;
+        }
+    }
+</style>

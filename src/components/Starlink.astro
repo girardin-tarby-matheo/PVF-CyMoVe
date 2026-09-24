@@ -1,5 +1,6 @@
 ---
 import mapImg from "../assets/map.png";
+import carImg from "../assets/car2.png"; // Assurez-vous que ce chemin est correct
 ---
 
 <!-- TERMINAL / SIMULATION INTERACTIVE -->
@@ -94,7 +95,7 @@ import mapImg from "../assets/map.png";
                 class="border border-[#38b06c] rounded-[14px] bg-[#0a251d]/90 p-5 shadow-[0_0_20px_rgba(56,176,108,0.15)] flex flex-col justify-between animate-[slideUp_0.4s_ease-out]"
             >
                 <div class="text-[#72a69e] text-[14px] font-bold mb-3">
-                    Subaru Impreza 2023 -- Historique localisation
+                    Historique localisation
                 </div>
                 <div
                     class="relative h-[150px] bg-[#122e25] rounded overflow-hidden flex items-center justify-center border border-[#38b06c]/30"
@@ -120,7 +121,7 @@ import mapImg from "../assets/map.png";
                 class="border border-[#38b06c] rounded-[14px] bg-[#0a251d]/90 p-5 shadow-[0_0_20px_rgba(56,176,108,0.15)] flex flex-col justify-between animate-[slideUp_0.4s_ease-out_0.15s_both]"
             >
                 <div class="text-[#72a69e] text-[14px] font-bold mb-3">
-                    Subaru Impreza 2023 -- Historique localisation
+                    Historique localisation
                 </div>
                 <div class="flex flex-col gap-2.5 text-[13px] text-[#b2d5ce]">
                     <div
@@ -158,19 +159,66 @@ import mapImg from "../assets/map.png";
 
             <!-- Vignette 3 : Contrôle véhicule -->
             <div
-                class="border border-[#38b06c] rounded-[14px] bg-[#0a251d]/90 p-5 shadow-[0_0_20px_rgba(56,176,108,0.15)] flex flex-col justify-center items-center gap-4 animate-[slideUp_0.4s_ease-out_0.3s_both]"
+                class="border border-[#38b06c] rounded-[14px] bg-[#0a251d]/90 p-5 shadow-[0_0_20px_rgba(56,176,108,0.15)] flex flex-col justify-between animate-[slideUp_0.4s_ease-out_0.3s_both]"
             >
-                <div class="text-[#72a69e] text-[14px] font-bold self-start">
-                    Subaru Impreza 2023 -- Contrôle du véhicule
+                <div class="text-[#72a69e] text-[14px] font-bold">
+                    Contrôle du véhicule
                 </div>
-                <button
-                    class="w-full py-3 bg-[#1b4e3d] text-[#61daa9] rounded-lg text-[15px] font-extrabold border border-[#38b06c] hover:bg-[#38b06c] hover:text-[#061d2b] transition-colors cursor-pointer shadow-md"
-                    >DÉMARRER</button
-                >
-                <button
-                    class="w-full py-3 bg-[#4e1b1b] text-[#da6161] rounded-lg text-[15px] font-extrabold border border-[#da6161] hover:bg-[#da6161] hover:text-white transition-colors cursor-pointer shadow-md"
-                    >DÉVERROUILLER</button
-                >
+
+                <div class="grid grid-cols-2 gap-4 items-center my-auto">
+                    <!-- Boîte de prévisualisation avec carImg et statuts dynamiques -->
+                    <div
+                        class="border border-[#38b06c]/30 rounded-[10px] bg-[#07221C] p-3 flex flex-col items-center justify-center relative"
+                    >
+                        <img
+                            src={carImg.src}
+                            alt="Subaru Impreza 2023"
+                            class="w-full h-auto object-contain max-h-[65px] mb-2 opacity-90"
+                        />
+                        <span
+                            class="text-[#b2d5ce] text-[11px] font-semibold mb-2"
+                            >Subaru Impreza 2023</span
+                        >
+                        <div
+                            class="flex items-center gap-2 w-full justify-around text-[10px]"
+                        >
+                            <!-- Statut Moteur -->
+                            <div class="flex items-center gap-1">
+                                <span
+                                    id="engine-dot"
+                                    class="w-2 h-2 rounded-full bg-[#da6161]"
+                                ></span>
+                                <span id="engine-text" class="text-[#da6161]"
+                                    >moteur éteint</span
+                                >
+                            </div>
+                            <!-- Statut Verrouillage -->
+                            <div class="flex items-center gap-1">
+                                <span
+                                    id="lock-dot"
+                                    class="w-2 h-2 rounded-full bg-[#38b06c]"
+                                ></span>
+                                <span id="lock-text" class="text-[#38b06c]"
+                                    >verrouillé</span
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Boutons d'action interactifs -->
+                    <div class="flex flex-col gap-3">
+                        <button
+                            id="btn-start"
+                            class="w-full py-3 bg-[#1b4e3d] text-[#61daa9] rounded-lg text-[15px] font-extrabold border border-[#38b06c] hover:bg-[#38b06c] hover:text-[#061d2b] transition-colors cursor-pointer shadow-md"
+                            >DÉMARRER</button
+                        >
+                        <button
+                            id="btn-unlock"
+                            class="w-full py-3 bg-[#4e1b1b] text-[#da6161] rounded-lg text-[15px] font-extrabold border border-[#da6161] hover:bg-[#da6161] hover:text-white transition-colors cursor-pointer shadow-md"
+                            >DÉVERROUILLER</button
+                        >
+                    </div>
+                </div>
             </div>
 
             <!-- Vignette 4 : Infos personnelles -->
@@ -178,7 +226,7 @@ import mapImg from "../assets/map.png";
                 class="border border-[#38b06c] rounded-[14px] bg-[#0a251d]/90 p-5 shadow-[0_0_20px_rgba(56,176,108,0.15)] flex flex-col justify-between animate-[slideUp_0.4s_ease-out_0.45s_both]"
             >
                 <div class="text-[#72a69e] text-[14px] font-bold mb-2">
-                    Subaru Impreza 2023 -- Infos personnelles
+                    Infos personnelles
                 </div>
                 <div class="grid grid-cols-2 gap-3 text-[13px] text-[#b2d5ce]">
                     <div>
@@ -216,13 +264,23 @@ import mapImg from "../assets/map.png";
 </div>
 
 <script>
-    // Simulation interactive Cas 1 (Apparition séquentielle des vignettes)
     document.addEventListener("DOMContentLoaded", () => {
         const startBtn = document.getElementById("start-sim-btn");
         const resetBtn = document.getElementById("reset-sim");
         const step0 = document.getElementById("sim-step-0");
         const step1 = document.getElementById("sim-step-1");
         const step2 = document.getElementById("sim-step-2");
+
+        // Éléments interactifs de contrôle du véhicule
+        const btnStart = document.getElementById("btn-start");
+        const btnUnlock = document.getElementById("btn-unlock");
+        const engineDot = document.getElementById("engine-dot");
+        const engineText = document.getElementById("engine-text");
+        const lockDot = document.getElementById("lock-dot");
+        const lockText = document.getElementById("lock-text");
+
+        let isEngineRunning = false;
+        let isUnlocked = false;
 
         if (startBtn && step0 && step1 && step2) {
             startBtn.addEventListener("click", () => {
@@ -241,7 +299,80 @@ import mapImg from "../assets/map.png";
                 step2.classList.add("hidden");
                 step1.classList.add("hidden");
                 step0.classList.remove("hidden");
+
+                // Réinitialiser les états du véhicule
+                isEngineRunning = false;
+                isUnlocked = false;
+                updateVehicleUI();
             });
+        }
+
+        // Logique pour basculer l'état du moteur
+        if (btnStart) {
+            btnStart.addEventListener("click", () => {
+                isEngineRunning = !isEngineRunning;
+                updateVehicleUI();
+            });
+        }
+
+        // Logique pour basculer l'état du verrouillage
+        if (btnUnlock) {
+            btnUnlock.addEventListener("click", () => {
+                isUnlocked = !isUnlocked;
+                updateVehicleUI();
+            });
+        }
+
+        // Fonction de mise à jour visuelle des textes et couleurs
+        function updateVehicleUI() {
+            if (isEngineRunning) {
+                engineDot.className =
+                    "w-2 h-2 rounded-full bg-[#38b06c] animate-pulse";
+                engineText.className = "text-[#38b06c]";
+                engineText.textContent = "moteur allumé";
+                btnStart.textContent = "ARRÊTER";
+                btnStart.classList.replace("bg-[#1b4e3d]", "bg-[#4e1b1b]");
+                btnStart.classList.replace("text-[#61daa9]", "text-[#da6161]");
+                btnStart.classList.replace(
+                    "border-[#38b06c]",
+                    "border-[#da6161]",
+                );
+            } else {
+                engineDot.className = "w-2 h-2 rounded-full bg-[#da6161]";
+                engineText.className = "text-[#da6161]";
+                engineText.textContent = "moteur éteint";
+                btnStart.textContent = "DÉMARRER";
+                btnStart.classList.replace("bg-[#4e1b1b]", "bg-[#1b4e3d]");
+                btnStart.classList.replace("text-[#da6161]", "text-[#61daa9]");
+                btnStart.classList.replace(
+                    "border-[#da6161]",
+                    "border-[#38b06c]",
+                );
+            }
+
+            if (isUnlocked) {
+                lockDot.className = "w-2 h-2 rounded-full bg-[#da6161]";
+                lockText.className = "text-[#da6161]";
+                lockText.textContent = "déverrouillé";
+                btnUnlock.textContent = "VERROUILLER";
+                btnUnlock.classList.replace("bg-[#4e1b1b]", "bg-[#1b4e3d]");
+                btnUnlock.classList.replace("text-[#da6161]", "text-[#61daa9]");
+                btnUnlock.classList.replace(
+                    "border-[#da6161]",
+                    "border-[#38b06c]",
+                );
+            } else {
+                lockDot.className = "w-2 h-2 rounded-full bg-[#38b06c]";
+                lockText.className = "text-[#38b06c]";
+                lockText.textContent = "verrouillé";
+                btnUnlock.textContent = "DÉVERROUILLER";
+                btnUnlock.classList.replace("bg-[#1b4e3d]", "bg-[#4e1b1b]");
+                btnUnlock.classList.replace("text-[#61daa9]", "text-[#da6161]");
+                btnUnlock.classList.replace(
+                    "border-[#38b06c]",
+                    "border-[#da6161]",
+                );
+            }
         }
     });
 </script>

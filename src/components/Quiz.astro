@@ -22,6 +22,14 @@
 
     <div id="quiz-options" class="flex flex-col gap-3 w-full items-center">
     </div>
+
+    <div
+        id="quiz-feedback"
+        class="hidden mt-5 rounded-2xl bg-white/80 px-4 py-3 text-center text-[#107AA5]"
+        role="status"
+        aria-live="polite"
+    >
+    </div>
 </div>
 
 <script>
@@ -74,55 +82,118 @@
 
     let currentQuestion = 0;
     let score = 0;
+    const answers: number[] = [];
 
     const questionEl = document.getElementById("quiz-question");
     const optionsEl = document.getElementById("quiz-options");
     const progressEl = document.getElementById("quiz-progress");
+    const feedbackEl = document.getElementById("quiz-feedback");
 
     function loadQuestion() {
-        if (!questionEl || !optionsEl || !progressEl) return;
+        if (!questionEl || !optionsEl || !progressEl || !feedbackEl) return;
         const q = quizData[currentQuestion];
 
         questionEl.textContent = q.question;
         progressEl.textContent = `${currentQuestion + 1} / ${quizData.length}`;
 
         optionsEl.innerHTML = "";
+        feedbackEl.className = "hidden";
+        feedbackEl.innerHTML = "";
 
         q.options.forEach((opt, index) => {
             const btn = document.createElement("button");
             btn.type = "button";
-            btn.className = `flex flex-row justify-center items-center py-2.5 px-4 gap-[10px] w-full max-w-[540px] h-[50px] bg-[rgba(255,255,255,0.25)] shadow-[0px_12px_30px_rgba(6,27,43,0.08),inset_0px_1px_0px_rgba(255,255,255,0.86)] rounded-[20px] border-none font-sans font-normal text-[17px] leading-snug text-[#107AA5] cursor-pointer transition-all duration-200 hover:bg-[rgba(255,255,255,0.45)] hover:-translate-y-0.5`;
+            btn.className = `quiz-option flex flex-row justify-center items-center py-2.5 px-4 gap-[10px] w-full max-w-[540px] min-h-[50px] bg-[rgba(255,255,255,0.25)] shadow-[0px_12px_30px_rgba(6,27,43,0.08),inset_0px_1px_0px_rgba(255,255,255,0.86)] rounded-[20px] border-2 border-transparent font-sans font-normal text-[17px] leading-snug text-[#107AA5] cursor-pointer transition-all duration-200 hover:bg-[rgba(255,255,255,0.45)] hover:-translate-y-0.5`;
             btn.textContent = opt;
             btn.onclick = () => selectAnswer(index);
             optionsEl.appendChild(btn);
         });
     }
 
-    function selectAnswer(index) {
-        if (index === quizData[currentQuestion].answer) {
-            score++;
-        }
+    function selectAnswer(index: number) {
+        if (!optionsEl || !feedbackEl) return;
+        const question = quizData[currentQuestion];
+        const isCorrect = index === question.answer;
+        answers[currentQuestion] = index;
+        if (isCorrect) score++;
 
-        currentQuestion++;
+        const optionButtons = Array.from(
+            optionsEl.querySelectorAll<HTMLButtonElement>(".quiz-option"),
+        );
+        optionButtons.forEach((button, optionIndex) => {
+            button.disabled = true;
+            button.classList.remove(
+                "hover:bg-[rgba(255,255,255,0.45)]",
+                "hover:-translate-y-0.5",
+            );
+            if (optionIndex === question.answer) {
+                button.classList.add(
+                    "!border-emerald-500",
+                    "!bg-emerald-100",
+                    "!text-emerald-800",
+                );
+            } else if (optionIndex === index) {
+                button.classList.add(
+                    "!border-rose-500",
+                    "!bg-rose-100",
+                    "!text-rose-800",
+                );
+            }
+        });
 
-        if (currentQuestion < quizData.length) {
-            loadQuestion();
-        } else {
-            showResults();
-        }
+        feedbackEl.className = `mt-5 rounded-2xl bg-white/85 px-4 py-3 text-center ${isCorrect ? "text-emerald-700" : "text-rose-700"}`;
+        feedbackEl.innerHTML = `
+            <p class="m-0 text-lg font-extrabold">${isCorrect ? "Bonne réponse !" : "Dommage !"}</p>
+            <p class="mt-1 mb-3 text-sm text-slate-700">La bonne réponse était : <strong>${question.options[question.answer]}</strong></p>
+            <button type="button" id="quiz-next" class="rounded-full bg-[#107AA5] px-5 py-2 text-sm font-bold text-white transition hover:bg-[#0b5e80]">
+                ${currentQuestion + 1 < quizData.length ? "Question suivante" : "Voir mon résultat"}
+            </button>
+        `;
+        document.getElementById("quiz-next")?.addEventListener("click", () => {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) loadQuestion();
+            else showResults();
+        });
     }
 
     function showResults() {
-        if (!questionEl || !optionsEl || !progressEl) return;
-        questionEl.textContent = "Résultat du quiz";
+        if (!questionEl || !optionsEl || !progressEl || !feedbackEl) return;
+        questionEl.textContent = "Votre résultat";
+        progressEl.textContent = `${score} / ${quizData.length}`;
         optionsEl.innerHTML = "";
-        progressEl.textContent = "";
 
-        const result = document.createElement("p");
-        result.className = "mt-6 text-white text-[20px] font-bold text-center";
-        result.textContent = `Tu as ${score} bonne(s) réponse(s) sur ${quizData.length}.`;
+        const encouragement =
+            score === quizData.length
+                ? "Félicitations ! Vous avez compris les différents points d’accès de l’attaque."
+                : score >= 2
+                  ? "Bien joué ! Vous avez identifié une grande partie des situations à risque."
+                  : "Dommage ! Relisez les réponses pour retenir les différents points d’accès.";
 
+        const result = document.createElement("div");
+        result.className = "w-full text-center text-[#107AA5]";
+        result.innerHTML = `
+            <p class="m-0 text-2xl font-extrabold">${score} bonne${score > 1 ? "s" : ""} réponse${score > 1 ? "s" : ""} sur ${quizData.length}</p>
+            <p class="mt-2 mb-5 text-lg font-bold">${encouragement}</p>
+            <div class="space-y-2 text-left">
+                ${quizData
+                    .map((question, questionIndex) => {
+                        const isCorrect =
+                            answers[questionIndex] === question.answer;
+                        return `<div class="rounded-xl border-2 ${isCorrect ? "border-emerald-300 bg-emerald-50" : "border-rose-300 bg-rose-50"} px-3 py-2 text-sm text-slate-700">
+                        <strong>${isCorrect ? "✓" : "✗"} Question ${questionIndex + 1}</strong> · Bonne réponse : ${question.options[question.answer]}
+                    </div>`;
+                    })
+                    .join("")}
+            </div>
+        `;
         optionsEl.appendChild(result);
+
+        feedbackEl.className =
+            "mt-5 rounded-2xl bg-white/85 px-4 py-3 text-center text-[#107AA5]";
+        feedbackEl.innerHTML = `
+            <p class="m-0 text-base font-extrabold">À retenir</p>
+            <p class="mt-1 mb-0 text-sm leading-relaxed text-slate-700">Une clé Tesla peut être clonée rapidement lorsque l'attaquant se trouve à proximité ou utilise un relais. La distance et les échanges sans authentification forte deviennent alors des points d'accès à protéger.</p>
+        `;
     }
 
     loadQuestion();

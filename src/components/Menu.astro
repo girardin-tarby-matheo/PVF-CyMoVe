@@ -1,19 +1,27 @@
 ---
 const navItems = [
     { id: "introduction", label: "Introduction" },
-    { id: "cas-1", label: "Cas 1" },
-    { id: "cas-2", label: "Cas 2" },
-    { id: "cas-3", label: "Cas 3" },
-    { id: "cas-4", label: "Cas 4" },
+    { id: "cas-4", label: "Cas 1" },
+    { id: "cas-3", label: "Cas 2" },
+    { id: "cas-2", label: "Cas 3" },
+    { id: "cas-1", label: "Cas 4" },
     { id: "synthese", label: "Synthèse" },
 ];
 
 import CymoveLogo from "../assets/cymove2.svg";
-import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
 ---
 
-<div class="menu w-70 mr-0">
-    <aside class="sidebar w-70" aria-label="Navigation du parcours">
+<div class="menu" data-collapsed="false">
+    <aside class="sidebar" aria-label="Navigation du parcours">
+        <button
+            class="collapse-button"
+            type="button"
+            aria-label="Réduire le menu"
+            aria-expanded="true"
+            title="Réduire le menu"
+        >
+            <span class="collapse-chevron" aria-hidden="true"></span>
+        </button>
         <div class="brand-logos">
             <img
                 src={CymoveLogo.src}
@@ -22,25 +30,23 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
                 height="auto"
                 loading="eager"
             />
-            <img
-                src={PoleVehiculeLogo.src}
-                alt="Logo Pôle Véhicule du Futur"
-                width="75%"
-                height="auto"
-                loading="eager"
-            />
         </div>
 
         <span class="brand-text">
-            <strong>Acculturation</strong><br />
-            <strong>Cybersécurité</strong><br />
-            <small>Module interactif 4HFactory</small>
+            <strong>Quand les hackers</strong><br />
+            <strong>ciblent nos voitures</strong><br />
+            <small>Acculturation Cybersécurité</small>
         </span>
 
         <nav class="desktop-nav" aria-label="Sommaire principal">
             {
                 navItems.map((item) => (
-                    <a class="nav-link" href={`#${item.id}`}>
+                    <a
+                        class="nav-link"
+                        href={`#${item.id}`}
+                        data-label={item.label}
+                        aria-current={item.id === "introduction" ? "step" : undefined}
+                    >
                         <span class="nav-dot" aria-hidden="true" />
                         <span class="nav-text">{item.label}</span>
                     </a>
@@ -52,12 +58,7 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
 
 <header class="mobile-header">
     <div class="mobile-brand">
-        <img
-            src={CymoveLogo.src}
-            alt="Logo CyMove"
-            width="40"
-            height="auto"
-        />
+        <img src={CymoveLogo.src} alt="Logo CyMove" width="40" height="auto" />
         <span class="brand-label">
             <strong>Acculturation</strong>
             <strong>Cybersécurité</strong>
@@ -75,6 +76,37 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
 </header>
 
 <script>
+    const menu = document.querySelector<HTMLElement>(".menu");
+    const layout = document.querySelector<HTMLElement>(".layout");
+    const collapseButton =
+        document.querySelector<HTMLButtonElement>(".collapse-button");
+    const storageKey = "cymove-menu-collapsed";
+
+    const setCollapsed = (collapsed: boolean, persist = true) => {
+        if (!menu || !layout || !collapseButton) return;
+
+        menu.dataset.collapsed = String(collapsed);
+        layout.dataset.menuCollapsed = String(collapsed);
+        collapseButton.setAttribute("aria-expanded", String(!collapsed));
+        collapseButton.setAttribute(
+            "aria-label",
+            collapsed ? "Ouvrir le menu" : "Réduire le menu",
+        );
+        collapseButton.title = collapsed ? "Ouvrir le menu" : "Réduire le menu";
+
+        if (persist) sessionStorage.setItem(storageKey, String(collapsed));
+    };
+
+    const savedState = sessionStorage.getItem(storageKey);
+    const initialCollapsed =
+        savedState === "true" ||
+        (savedState === null && window.matchMedia("(max-width: 820px)").matches);
+    setCollapsed(initialCollapsed, false);
+
+    collapseButton?.addEventListener("click", () => {
+        setCollapsed(menu?.dataset.collapsed !== "true");
+    });
+
     // Gestion du ScrollSpy et de l'interactivité mobile
     const navLinks = document.querySelectorAll<HTMLAnchorElement>(
         ".desktop-nav .nav-link",
@@ -117,7 +149,7 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
                         if (href === activeId) {
                             link.classList.add("active");
                             link.classList.remove("past");
-                            link.setAttribute("aria-current", "location");
+                            link.setAttribute("aria-current", "step");
                             pastActive = true;
                         } else if (!pastActive) {
                             link.classList.add("past");
@@ -159,31 +191,143 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
         background: #effbfe;
     }
 
+    /* Dépend du site parent : remplacez cette valeur par la hauteur de son en-tête. */
+    :global(:root) {
+        --parent-header-height: 0px;
+        --menu-open-width: 280px;
+        --menu-collapsed-width: 72px;
+        --menu-transition: 300ms ease-in-out;
+    }
+
+    :global(.layout) {
+        display: grid !important;
+        grid-template-columns: var(--menu-open-width) minmax(0, 1fr);
+        transition: grid-template-columns var(--menu-transition);
+    }
+
+    :global(.layout[data-menu-collapsed="true"]) {
+        grid-template-columns: var(--menu-collapsed-width) minmax(0, 1fr);
+    }
+
+    .menu {
+        position: relative;
+        width: var(--menu-open-width);
+        min-width: 0;
+        overflow: visible;
+        z-index: 3;
+        transition: width var(--menu-transition);
+    }
+
+    .menu[data-collapsed="true"] {
+        width: var(--menu-collapsed-width);
+    }
+
     /* Layout principal */
     .sidebar {
         position: sticky;
-        top: 0;
+        top: var(--parent-header-height);
         align-self: start;
-        height: 100vh;
+        width: 100%;
+        height: calc(100vh - var(--parent-header-height));
         display: flex;
         flex-direction: column;
         padding: 28px 20px 28px 24px;
         color: #0b6287;
         overflow-y: auto;
         margin-right: 0;
+        overflow-x: hidden;
+        transition: padding var(--menu-transition);
+    }
+
+    .collapse-button {
+        position: absolute;
+        top: 12px;
+        right: 8px;
+        z-index: 4;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        
+        border-radius: 50%;
+        color: #0b6287;
+        background: #c9edf5;
+      
+        cursor: pointer;
+        transition:
+            background-color var(--menu-transition),
+            border-color var(--menu-transition),
+            box-shadow var(--menu-transition),
+            transform var(--menu-transition);
+    }
+
+    .collapse-button:hover,
+    .collapse-button:focus-visible {
+        background: #a9dce9;
+        border-color: rgba(15, 115, 156, 0.42);
+        box-shadow: 0 3px 10px rgba(7, 40, 58, 0.22);
+    }
+
+    .collapse-button:hover {
+        transform: translateX(1px);
+    }
+
+    .collapse-button:focus-visible {
+        outline: 2px solid #0f739c;
+        outline-offset: 2px;
+    }
+
+    .collapse-chevron {
+        display: block;
+        width: 8px;
+        height: 8px;
+        border-top: 2px solid currentColor;
+        border-right: 2px solid currentColor;
+        transform: rotate(-135deg);
+        transform-origin: center;
+        transition: transform var(--menu-transition);
+    }
+
+    .menu[data-collapsed="true"] .collapse-chevron {
+        transform: rotate(45deg);
     }
 
     .brand-logos {
         display: flex;
         flex-direction: column;
-        gap: 12px;
-        margin-bottom: 20px;
+        align-items: flex-start;
+        gap: 8px;
+        margin-bottom: 50px;
+        overflow: hidden;
+        opacity: 1;
+        max-width: 100%;
+        transition: opacity var(--menu-transition), max-width var(--menu-transition), margin var(--menu-transition);
+    }
+
+    .brand-logos img {
+        display: block;
+        width: auto;
+        height: auto;
+        object-fit: contain;
+    }
+
+    .brand-logos img:first-child {
+        width: 130px;
+        max-width: 100%;
     }
 
     .brand-text {
         font-size: 25px;
         line-height: 1.35;
         color: #07283a;
+        display: block;
+        overflow: hidden;
+        white-space: nowrap;
+        opacity: 1;
+        max-width: 100%;
+        transition: opacity var(--menu-transition), max-width var(--menu-transition), margin var(--menu-transition);
     }
 
     /* Sommaire Desktop & Barre de progression */
@@ -194,6 +338,7 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
         gap: 28px;
         margin: 36px 0 0 12px;
         padding-left: 24px;
+        transition: margin var(--menu-transition), padding var(--menu-transition);
     }
 
     .nav-link {
@@ -205,6 +350,7 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
         outline: none;
         transition: color 0.2s ease;
         z-index: 2;
+        min-height: 40px;
     }
 
     .nav-link:focus-visible {
@@ -219,7 +365,13 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
         line-height: 1.2;
         transition:
             font-size 0.2s ease,
-            color 0.2s ease;
+            color 0.2s ease,
+            opacity var(--menu-transition),
+            max-width var(--menu-transition);
+        overflow: hidden;
+        white-space: nowrap;
+        max-width: 180px;
+        opacity: 1;
     }
 
     /* Puce inactive */
@@ -286,6 +438,58 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
         color: #0f739c;
     }
 
+    .menu[data-collapsed="true"] .sidebar {
+        padding-left: 36px;
+        padding-right: 20px;
+    }
+
+    .menu[data-collapsed="true"] .collapse-button {
+        right: 20px;
+    }
+
+    .menu[data-collapsed="true"] .brand-logos,
+    .menu[data-collapsed="true"] .brand-text {
+        max-width: 0;
+        margin-bottom: 0;
+        opacity: 0;
+    }
+
+    .menu[data-collapsed="true"] .desktop-nav {
+        margin-left: 0;
+        padding-left: 24px;
+    }
+
+    .menu[data-collapsed="true"] .nav-text {
+        max-width: 0;
+        opacity: 0;
+    }
+
+    .menu[data-collapsed="true"] .nav-link::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 28px;
+        z-index: 5;
+        width: max-content;
+        max-width: 180px;
+        padding: 8px 10px;
+        border-radius: 4px;
+        color: #07283a;
+        background: #ffffff;
+        box-shadow: 0 4px 14px rgba(7, 40, 58, 0.16);
+        font-size: 13px;
+        font-weight: 700;
+        opacity: 0;
+        pointer-events: none;
+        transform: translateY(4px);
+        transition: opacity 150ms ease, transform 150ms ease;
+    }
+
+    .menu[data-collapsed="true"] .nav-link:hover::before,
+    .menu[data-collapsed="true"] .nav-link:focus-visible::before {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
     /* Pied de sidebar */
     .sidebar-line {
         width: 100%;
@@ -307,23 +511,33 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
         display: none;
     }
 
-    @media (max-width: 900px) {
+    @media (max-width: 820px) {
+        :global(.layout),
+        :global(.layout[data-menu-collapsed="true"]) {
+            grid-template-columns: var(--menu-collapsed-width) minmax(0, 1fr);
+        }
+
+        :global(.layout[data-menu-collapsed="false"]) {
+            grid-template-columns: var(--menu-open-width) minmax(0, 1fr);
+        }
+
+        .menu {
+            width: var(--menu-collapsed-width);
+        }
+
         .sidebar {
-            display: none;
+            display: flex;
+            height: calc(100vh - var(--parent-header-height));
+            padding-left: 36px;
+            padding-right: 20px;
+        }
+
+        .menu[data-collapsed="false"] {
+            width: var(--menu-open-width);
         }
 
         .mobile-header {
-            position: sticky;
-            z-index: 100;
-            top: 0;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            min-height: 64px;
-            padding: 12px 20px;
-            border-bottom: 1px solid rgba(129, 206, 226, 0.4);
-            background: rgba(239, 251, 254, 0.92);
-            backdrop-filter: blur(12px);
+            display: none;
         }
 
         .mobile-brand {
@@ -423,7 +637,9 @@ import PoleVehiculeLogo from "../assets/pôlevéhiculedufutur.svg";
         .nav-link,
         .nav-text,
         .nav-dot,
-        .nav-link::after {
+        .nav-link::after,
+        .collapse-button,
+        .collapse-chevron {
             transition: none !important;
         }
     }

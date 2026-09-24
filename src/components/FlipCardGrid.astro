@@ -1,618 +1,807 @@
 ---
+export interface StepItem {
+  step: number;
+  text: string;
+}
 
-interface GlossaryCard {
+// Backwards compatibility for legacy props
+interface LegacyGlossaryCard {
   type: "glossaire";
   front: string;
   back: string;
 }
 
-interface StepCard {
+interface LegacyStepCard {
   type: "etape";
   step: number;
-  front: string;
-  back: string;
+  front?: string;
+  back?: string;
+  text?: string;
 }
 
-export type FlipCard = GlossaryCard | StepCard;
+export type FlipCard = LegacyGlossaryCard | LegacyStepCard;
 
 interface Props {
-  cards: FlipCard[];
+  steps?: StepItem[];
+  cards?: (StepItem | FlipCard)[];
 }
 
-const { cards } = Astro.props;
+const { steps, cards } = Astro.props;
 
-// Séparer glossaire et étapes, trier les étapes par numéro
-const glossaryCards = cards.filter((c): c is GlossaryCard => c.type === "glossaire");
-const stepCards = cards
-  .filter((c): c is StepCard => c.type === "etape")
-  .sort((a, b) => a.step - b.step);
+// Normalisation des étapes reçues
+let rawSteps: StepItem[] = [];
+
+if (steps && steps.length > 0) {
+  rawSteps = steps;
+} else if (cards && cards.length > 0) {
+  rawSteps = cards
+    .filter((c: any) => !c.type || c.type === "etape")
+    .map((c: any) => ({
+      step: c.step,
+      text: c.text || c.back || c.front || "",
+    }));
+}
+
+// Sérialisation sécurisée pour le script client
+const stepsJson = JSON.stringify(rawSteps);
 ---
 
-<section class="flipcard-grid-wrapper" aria-label="Jeu de cartes pédagogiques">
-  <noscript>
-    <p class="flipcard-noscript">
-      Les cartes ci-dessous sont entièrement consultables.
-      Pour activer l'animation de retournement, activez JavaScript dans votre navigateur.
+<section 
+  class="relative w-full py-6 [font-family:-apple-system,'Segoe_UI',system-ui,sans-serif]" 
+  aria-labelledby="step-reorder-title"
+  id="step-reorder-activity"
+>
+  <!-- En-tête de l'activité (conforme au design Figma/maquette) -->
+  <div class="mb-6">
+    <div class="flex items-center gap-3">
+      <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-[#fef3c7] text-[#f59e0b] shadow-xs" aria-hidden="true">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+      </span>
+      <h3 id="step-reorder-title" class="text-xl sm:text-2xl font-bold tracking-tight text-[#081924] m-0">
+        Remets les étapes de l'attaque dans l'ordre
+      </h3>
+    </div>
+    <p class="mt-1 text-[15px] text-[#46606b] m-0">
+      Glisse les cartes dans le bon ordre.
     </p>
-  </noscript>
+  </div>
 
-  {/* ── SVG Defs partagées (textures) ── */}
-  <svg class="flipcard-svg-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-    <defs>
-      <pattern id="flipcard-texture" width="4" height="4" patternTransform="scale(2.5)" patternUnits="userSpaceOnUse">
-        <path fill="#000000" d="M1 3h1v1H1V3zm2-2h1v1H3V1z"></path>
-      </pattern>
-      <pattern id="flipcard-back-pattern-blue" width="20" height="20" patternTransform="rotate(30) scale(1.2)" patternUnits="userSpaceOnUse">
-        <rect width="100%" height="100%" fill="#e8f0fe"/>
-        <circle cx="10" cy="10" r="1.5" fill="#2F6FED" opacity="0.15"/>
-        <circle cx="0" cy="0" r="1.5" fill="#2F6FED" opacity="0.1"/>
-        <circle cx="20" cy="0" r="1.5" fill="#2F6FED" opacity="0.1"/>
-        <circle cx="0" cy="20" r="1.5" fill="#2F6FED" opacity="0.1"/>
-        <circle cx="20" cy="20" r="1.5" fill="#2F6FED" opacity="0.1"/>
-      </pattern>
-      <pattern id="flipcard-back-pattern-amber" width="20" height="20" patternTransform="rotate(-15) scale(1.2)" patternUnits="userSpaceOnUse">
-        <rect width="100%" height="100%" fill="#fef7e6"/>
-        <path fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.18" d="M0 10 Q5 5, 10 10 Q15 15, 20 10"/>
-        <path fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.12" d="M0 0 Q5 -5, 10 0 Q15 5, 20 0"/>
-        <path fill="none" stroke="#f59e0b" stroke-width="0.8" opacity="0.12" d="M0 20 Q5 15, 10 20 Q15 25, 20 20"/>
-      </pattern>
-    </defs>
-  </svg>
+  <!-- Zone de notification vocale / Screen Reader Live Region -->
+  <div 
+    id="a11y-live-feedback" 
+    class="sr-only" 
+    role="status" 
+    aria-live="polite" 
+    aria-atomic="true"
+  ></div>
 
-  {/* ── Étapes ── */}
-  {stepCards.length > 0 && (
-    <div class="flipcard-section">
-      <h3 class="flipcard-section-title">
-        <span class="flipcard-section-icon flipcard-section-icon--etape">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        </span>
-        Étapes de l'attaque
-      </h3>
-      <div class="flipcard-row flipcard-row--steps">
-        {stepCards.map((card) => (
-          <button
-            type="button"
-            class="flipcard flipcard--etape"
-            data-flipcard
-            aria-pressed="false"
-          >
-            <div class="flipcard-inner">
-              {/* RECTO */}
-              <div class="flipcard-face flipcard-front flipcard-front--etape">
-                <svg
-                  class="flipcard-step-illustration"
-                  viewBox="0 0 252 346"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                >
-                  <defs>
-                    <clipPath id={`step-card-clip-${card.step}`}>
-                      <rect width="252" height="346" rx="15" />
-                    </clipPath>
-                  </defs>
-                  <g clip-path={`url(#step-card-clip-${card.step})`}>
-                    <rect width="252" height="346" fill="#FFFFFF" />
-                  <path
-                    d="M49.4993 300C13.8993 318.4 3.33261 379 12.4993 390C97.4993 453 305.9 523.6 285.5 470C265.1 416.4 309.666 266 334.5 197.5C320.333 202 362.401 147.633 307.5 139.5C226.5 127.5 248.5 188.5 194 208.5C139.5 228.5 172 272 145 294.5C114 320.333 93.9993 277 49.4993 300Z"
-                    fill="#A6C4FF"
-                    fill-opacity="0.41"
-                  />
-                  <path
-                    d="M231.216 54.9724C266.816 36.5724 277.382 -24.0276 268.216 -35.0276C183.216 -98.0276 -25.1847 -168.628 -4.78467 -115.028C15.6153 -61.4276 -28.9513 88.9724 -53.7847 157.472C-39.618 152.972 -81.6859 207.339 -26.7852 215.472C54.2148 227.473 4 177.472 58.5 157.472C113 137.473 67.9688 76.7863 125 47.5C162 28.5 186.716 77.9724 231.216 54.9724Z"
-                    fill="#A6C4FF"
-                  />
-                  </g>
-                </svg>
-                <span class="flipcard-step-number">{card.step}</span>
-                <span class="flipcard-step-label">Étape</span>
-                <span class="flipcard-hint">
-                  <svg class="flipcard-hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-                  Retourner
-                </span>
-              </div>
-              {/* VERSO */}
-              <div class="flipcard-face flipcard-back flipcard-back--etape">
-                <span class="flipcard-back-step-number">{card.step}</span>
-                <span class="flipcard-back-step-label">Étape</span>
-                <span class="flipcard-definition">{card.back}</span>
-              </div>
-            </div>
-          </button>
-        ))}
+  <!-- Instructions accessibilité clavier masquées visuellement -->
+  <p class="sr-only">
+    Exercice d'ordonnancement accessible : utilisez la touche Tab pour naviguer sur une carte, 
+    appuyez sur Entrée ou Espace pour la saisir, utilisez les flèches directionnelles pour choisir un emplacement de 1 à 5, 
+    puis Entrée pour la déposer ou Échap pour annuler.
+  </p>
+
+  <!-- 1. ZONE DES 5 EMPLACEMENTS RÉCEPTEURS (SLOTS) -->
+  <div 
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5 sm:gap-4 mb-6" 
+    id="slots-container"
+    role="region"
+    aria-label="Emplacements chronologiques de 1 à 5"
+  >
+    {[1, 2, 3, 4, 5].map((slotNumber) => (
+      <div
+        class="reorder-slot relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#b9d5ff] bg-[#f0f6ff]/75 p-2.5 transition-all duration-200 min-h-[190px] sm:min-h-[220px] md:min-h-[250px] [aspect-ratio:3/4] focus-within:ring-3 focus-within:ring-[#2F6FED]"
+        data-slot-id={slotNumber}
+        tabindex="0"
+        role="group"
+        aria-label={`Emplacement étape ${slotNumber}. Actuellement vide.`}
+      >
+        <!-- Placeholder visuel quand le slot est vide -->
+        <div class="slot-placeholder absolute inset-0 flex flex-col items-center justify-center pointer-events-none select-none text-center">
+          <span class="text-[clamp(44px,4.5vw,62px)] font-black leading-none text-[#a6c4ff]/80">
+            {slotNumber}
+          </span>
+          <span class="mt-1 text-[clamp(13px,1.3vw,17px)] font-black uppercase tracking-wider text-[#a6c4ff]/80">
+            ÉTAPE
+          </span>
+        </div>
+
+        <!-- Conteneur pour accueillir la carte déposée -->
+        <div class="slot-card-holder relative z-10 w-full h-full flex items-center justify-center"></div>
       </div>
-    </div>
-  )}
+    ))}
+  </div>
 
-  {/* ── Glossaire ── */}
-  {glossaryCards.length > 0 && (
-    <div class="flipcard-section">
-      <h3 class="flipcard-section-title">
-        <span class="flipcard-section-icon flipcard-section-icon--glossaire">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-        </span>
-        Glossaire
-      </h3>
-      <div class="flipcard-row">
-        {glossaryCards.map((card) => (
-          <button
-            type="button"
-            class="flipcard flipcard--glossaire"
-            data-flipcard
-            aria-pressed="false"
-          >
-            <div class="flipcard-inner">
-              {/* RECTO */}
-              <div class="flipcard-face flipcard-front flipcard-front--glossaire">
-                <svg class="flipcard-overlay-texture" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="url(#flipcard-texture)" opacity=".06"/></svg>
-                <span class="flipcard-badge flipcard-badge--glossaire"></span>
-                <span class="flipcard-term">{card.front}</span>
-                <span class="flipcard-hint">
-                  <svg class="flipcard-hint-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
-                  Retourner
-                </span>
-              </div>
-              {/* VERSO */}
-              <div class="flipcard-face flipcard-back flipcard-back--glossaire">
-                <svg class="flipcard-overlay-texture" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><rect width="100%" height="100%" fill="url(#flipcard-back-pattern-blue)" /><rect width="100%" height="100%" fill="url(#flipcard-texture)" opacity=".04"/></svg>
-                <span class="flipcard-badge flipcard-badge--glossaire">Glossaire</span>
-                <span class="flipcard-back-title">{card.front}</span>
-                <span class="flipcard-definition">{card.back}</span>
-              </div>
-            </div>
-          </button>
-        ))}
-      </div>
+  <!-- 2. ZONE DE DÉPART DES CARTES MÉLANGÉES (POOL) -->
+  <div class="mb-7">
+    <div class="flex items-center justify-between mb-2.5">
+      <span class="text-sm font-bold tracking-wide uppercase text-[#46679f]/80">
+        Cartes à ordonner :
+      </span>
+      <span id="placed-count-indicator" class="text-xs font-semibold text-[#6b7280]">
+        0 / 5 placées
+      </span>
     </div>
-  )}
+
+    <div
+      id="cards-pool"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl border-2 border-dashed border-[#cbe0fc] bg-[#f5f9ff]/60 min-h-[140px] transition-all"
+      role="region"
+      aria-label="Zone des cartes à placer"
+    >
+      <!-- Les cartes mélangées seront injectées ici dynamiquement ou au SSR -->
+    </div>
+  </div>
+
+  <!-- 3. BARRE DE CONTRÔLE ET ACTIONS -->
+  <div class="flex flex-wrap items-center justify-between gap-4 py-2">
+    <div class="flex items-center gap-3">
+      <button
+        type="button"
+        id="btn-verify"
+        disabled
+        class="inline-flex items-center gap-2 rounded-xl bg-[#2F6FED] px-6 py-3 text-[15px] font-bold text-white shadow-[0_4px_14px_rgba(47,111,237,0.3)] transition-all duration-200 hover:bg-[#1f5ad4] hover:shadow-[0_6px_18px_rgba(47,111,237,0.4)] active:scale-95 disabled:pointer-events-none disabled:opacity-45 disabled:shadow-none focus-visible:outline-[3px] focus-visible:outline-[#2F6FED] focus-visible:outline-offset-2 cursor-pointer disabled:cursor-not-allowed"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        Vérifier
+      </button>
+
+      <button
+        type="button"
+        id="btn-reset"
+        class="inline-flex items-center gap-2 rounded-xl border border-[#cbd5e1] bg-white px-5 py-3 text-[15px] font-semibold text-[#334155] shadow-xs transition-all duration-200 hover:bg-[#f8fafc] hover:border-[#94a3b8] active:scale-95 focus-visible:outline-[3px] focus-visible:outline-[#2F6FED] focus-visible:outline-offset-2 cursor-pointer"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+          <path d="M3 3v5h5"/>
+        </svg>
+        Réinitialiser
+      </button>
+    </div>
+
+    <!-- Badge récapitulatif du score après vérification -->
+    <div 
+      id="feedback-summary-badge" 
+      class="hidden items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all"
+    >
+      <!-- Rempli par JavaScript -->
+    </div>
+  </div>
+
+  <!-- 4. BANNIÈRE DE SUCCÈS FINAL & TRACE ÉCRITE COMPLÈTE -->
+  <div 
+    id="success-sequence-recap" 
+    class="hidden mt-8 rounded-2xl border-2 border-[#10b981]/30 bg-[#f0fdf4] p-5 sm:p-7 shadow-[0_10px_25px_rgba(16,185,129,0.08)] transition-all"
+  >
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-[#10b981]/20 pb-4 mb-4">
+      <div class="flex items-center gap-2.5">
+        <span class="flex items-center justify-center w-8 h-8 rounded-full bg-[#10b981] text-white font-bold text-base shadow-xs">
+          ✓
+        </span>
+        <div>
+          <h4 class="text-lg sm:text-xl font-bold text-[#065f46] m-0">
+            Félicitations ! Séquence complète validée
+          </h4>
+          <p class="text-xs sm:text-sm text-[#047857] m-0">
+            Toutes les étapes sont dans le bon ordre chronologique.
+          </p>
+        </div>
+      </div>
+      <button
+        type="button"
+        id="btn-copy-summary"
+        class="inline-flex items-center gap-1.5 self-start sm:self-auto rounded-lg bg-white border border-[#10b981]/40 px-3.5 py-2 text-xs sm:text-sm font-bold text-[#065f46] hover:bg-[#ecfdf5] transition-all cursor-pointer shadow-xs"
+        aria-label="Copier le résumé des 5 étapes dans le presse-papier"
+      >
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+        <span id="copy-btn-text">Copier la trace écrite</span>
+      </button>
+    </div>
+
+    <h5 class="text-sm font-bold uppercase tracking-wider text-[#065f46] mb-3">
+      Trace écrite de l'attaque (à retenir) :
+    </h5>
+
+    <ol class="space-y-2.5 pl-0 list-none m-0" id="summary-ordered-list">
+      <!-- Rempli par JavaScript avec les 5 étapes numérotées -->
+    </ol>
+  </div>
+
+  <!-- Données injectées pour le contrôleur JS -->
+  <script type="application/json" id="reorder-data" set:html={stepsJson}></script>
 </section>
 
-<style>
-  /* ───────────────────────────────────────────────
-     SVG defs – hidden but must remain in DOM
-     ─────────────────────────────────────────────── */
-  .flipcard-svg-defs {
-    position: absolute;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-    pointer-events: none;
-  }
-
-  /* ───────────────────────────────────────────────
-     Wrapper
-     ─────────────────────────────────────────────── */
-  .flipcard-grid-wrapper {
-    position: relative;
-    width: 100%;
-    padding: 32px 0;
-    background: linear-gradient(180deg, #ffffff 0%, #eef4fb 100%);
-    font-family: -apple-system, "Segoe UI", system-ui, sans-serif;
-  }
-
-  .flipcard-noscript {
-    max-width: 700px;
-    margin: 0 auto 24px;
-    padding: 12px 16px;
-    background: #fef3c7;
-    border: 1px solid #f3e0b2;
-    border-radius: 8px;
-    color: #92400e;
-    font-size: 14px;
-    text-align: center;
-  }
-
-  /* ───────────────────────────────────────────────
-     Sections
-     ─────────────────────────────────────────────── */
-  .flipcard-section {
-    margin-bottom: 36px;
-  }
-
-  .flipcard-section-title {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin: 0 0 18px;
-    font-size: 20px;
-    font-weight: 700;
-    color: #101828;
-    letter-spacing: -0.01em;
-  }
-
-  .flipcard-section-icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 8px;
-  }
-
-  .flipcard-section-icon--glossaire {
-    background: #dbeafe;
-    color: #ffffff;
-  }
-
-  .flipcard-section-icon--etape {
-    background: #fef3c7;
-    color: #d97706;
-  }
-
-  /* ───────────────────────────────────────────────
-     Grilles
-     ─────────────────────────────────────────────── */
-  .flipcard-row {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
-    gap: 20px;
-  }
-
-  .flipcard-row--steps {
-    grid-template-columns: repeat(auto-fill, minmax(180px, 252px));
-  }
-
-  /* ───────────────────────────────────────────────
-     Carte (bouton)
-     ─────────────────────────────────────────────── */
-  .flipcard {
-    /* Reset du bouton SANS casser le focus */
-    display: block;
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    padding: 0;
-    margin: 0;
-    border: none;
-    background: transparent;
-    font: inherit;
-    color: inherit;
-    cursor: pointer;
-    text-align: left;
-    perspective: 900px;
-    -webkit-tap-highlight-color: transparent;
-    -webkit-user-select: none;
-    user-select: none;
-    /* drop-shadow instead of box-shadow for a more natural feel */
-    filter: drop-shadow(0 4px 12px rgba(16, 24, 40, 0.08));
-    transition: filter 0.25s ease;
-  }
-
-  .flipcard--etape {
-    aspect-ratio: 252 / 346;
-  }
-
-  .flipcard:hover {
-    filter: drop-shadow(0 12px 28px rgba(16, 24, 40, 0.16));
-  }
-
-  .flipcard:focus-visible {
-    outline: 3px solid #2F6FED;
-    outline-offset: 4px;
-    border-radius: 16px;
-  }
-
-  /* ───────────────────────────────────────────────
-     Conteneur interne (rotation)
-     ─────────────────────────────────────────────── */
-  .flipcard-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transform-style: preserve-3d;
-    will-change: transform;
-    /* Springy bounce timing function inspired by the CodePen playing card */
-    transition: transform 0.75s
-      linear(
-        0, 0.008 1.1%, 0.031 2.2%, 0.129 4.8%, 0.257 7.2%,
-        0.671 14.2%, 0.789 16.5%, 0.881 18.6%, 0.957 20.7%,
-        1.019 22.9%, 1.063 25.1%, 1.094 27.4%, 1.114 30.7%,
-        1.112 34.5%, 1.018 49.9%, 0.99 59.1%, 1
-      );
-  }
-
-  /* Hover lift — subtle 3D tilt + scale */
-  .flipcard:hover .flipcard-inner {
-    transform: scale(1.04) rotate3d(1, 1, 0, 2deg);
-  }
-
-  /* État retourné — piloté par JS via aria-pressed */
-  .flipcard[aria-pressed="true"] .flipcard-inner {
-    transform: rotateY(180deg);
-  }
-
-  .flipcard[aria-pressed="true"]:hover .flipcard-inner {
-    transform: rotateY(180deg) scale(1.04) rotate3d(1, 1, 0, 2deg);
-  }
-
-  /* ── prefers-reduced-motion : fondu au lieu de rotation ── */
-  @media (prefers-reduced-motion: reduce) {
-    .flipcard-inner {
-      transition: none;
-      transform-style: flat;
-      will-change: auto;
-    }
-
-    .flipcard:hover .flipcard-inner {
-      transform: none;
-    }
-
-    .flipcard[aria-pressed="true"] .flipcard-inner {
-      transform: none;
-    }
-
-    .flipcard[aria-pressed="true"]:hover .flipcard-inner {
-      transform: none;
-    }
-
-    .flipcard-front {
-      transition: opacity 0.3s ease;
-    }
-
-    .flipcard-back {
-      transition: opacity 0.3s ease;
-    }
-
-    .flipcard[aria-pressed="true"] .flipcard-front {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .flipcard[aria-pressed="true"] .flipcard-back {
-      opacity: 1;
-    }
-
-    .flipcard-face {
-      backface-visibility: visible;
-    }
-
-    .flipcard-back {
-      opacity: 0;
-      position: absolute;
-      inset: 0;
-      transform: none;
-    }
-  }
-
-  /* ───────────────────────────────────────────────
-     Faces
-     ─────────────────────────────────────────────── */
-  .flipcard-face {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 24px 18px;
-    border-radius: 16px;
-    backface-visibility: hidden;
-    overflow: hidden;
-    gap: 10px;
-  }
-
-  .flipcard-front {
-    z-index: 2;
-    background: #ffffff;
-  }
-
-  .flipcard-back {
-    transform: rotateY(180deg);
-    background: #ffffff;
-  }
-
-  /* SVG texture overlay (like the CodePen's card-texture) */
-  .flipcard-overlay-texture {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    mix-blend-mode: multiply;
-  }
-
-  /* Make sure all inner content sits above the texture */
-  .flipcard-badge,
-  .flipcard-term,
-  .flipcard-step-number,
-  .flipcard-definition,
-  .flipcard-hint {
-    position: relative;
-    z-index: 1;
-  }
-
-  /* ── Bordures distinctives ── */
-  .flipcard-front--glossaire {
-    border: 2px solid #d1d8e7;
-    box-shadow:
-      inset 0 0 0 3px rgba(47, 111, 237, 0.06),
-      0 1px 3px rgba(16, 24, 40, 0.07);
-  }
-
-
-
-
-  .flipcard-front--etape {
-    border: 0;
-    background: #ffffff;
-    box-shadow: none;
-  }
-
-  .flipcard-back--etape {
-    border: 5px solid #a6c4ff;
-    background: #ffffff;
-    box-shadow: none;
-    color: #86aaf2;
-  }
-
-  /* ───────────────────────────────────────────────
-     Badges
-     ─────────────────────────────────────────────── */
-  .flipcard-badge {
-    display: inline-block;
-    padding: 4px 12px;
-    border-radius: 20px;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-  }
-
-  .flipcard-badge--etape {
-    background: #fef3c7;
-    color: #92400e;
-  }
-
-  /* ───────────────────────────────────────────────
-     Contenu texte
-     ─────────────────────────────────────────────── */
-  .flipcard-term {
-    font-size: 18px;
-    font-weight: 700;
-    color: #101828;
-    text-align: center;
-    line-height: 1.3;
-  }
-
-  .flipcard-back-title {
-    font-size: 15px;
-    font-weight: 700;
-    color: #2F6FED;
-    text-align: center;
-    line-height: 1.2;
-    margin-top: 2px;
-  }
-
-  .flipcard-step-number {
-    position: absolute;
-    z-index: 1;
-    top: 32%;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: clamp(48px, 5vw, 70px);
-    font-weight: 800;
-    color: #a6c4ff;
-    line-height: 1;
-  }
-
-  .flipcard-step-label {
-    position: absolute;
-    z-index: 1;
-    top: 51%;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #a6c4ff;
-    font-size: clamp(15px, 1.7vw, 22px);
-    font-weight: 800;
-    line-height: 1;
-    text-transform: uppercase;
-    white-space: nowrap;
-  }
-
-  .flipcard-step-illustration {
-    position: absolute;
-    inset: 0;
-    z-index: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    border-radius: 15px;
-  }
-
-  .flipcard-back-step-number,
-  .flipcard-back-step-label {
-    position: relative;
-    z-index: 1;
-    color: #a6c4ff;
-  }
-
-  .flipcard-back-step-number {
-    font-size: clamp(42px, 4vw, 58px);
-    font-weight: 800;
-    line-height: 0.9;
-  }
-
-  .flipcard-back-step-label {
-    margin-top: -2px;
-    font-size: clamp(13px, 1.4vw, 18px);
-    font-weight: 800;
-    text-transform: uppercase;
-  }
-
-  .flipcard-back--etape .flipcard-definition {
-    position: relative;
-    z-index: 1;
-    max-width: 90%;
-    margin-top: 8px;
-    color: #46679f;
-  }
-
-  .flipcard-definition {
-    font-size: 14px;
-    line-height: 1.6;
-    color: #101828;
-    text-align: center;
-  }
-
-  .flipcard-hint {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    color: #6b7280;
-    font-style: italic;
-    margin-top: auto;
-    padding-top: 4px;
-    opacity: 0.7;
-    transition: opacity 0.2s ease;
-  }
-
-  .flipcard:hover .flipcard-hint {
-    opacity: 1;
-  }
-
-  .flipcard-hint-icon {
-    opacity: 0.6;
-  }
-
-  /* Hide hint once flipped */
-  .flipcard[aria-pressed="true"] .flipcard-hint {
-    visibility: hidden;
-  }
-</style>
-
 <script>
-  // Interactivité des cartes — retournement au clic / clavier
-  function initFlipCards() {
-    const cards = document.querySelectorAll<HTMLButtonElement>("[data-flipcard]");
+  interface StepData {
+    step: number;
+    text: string;
+  }
 
-    cards.forEach((card) => {
-      // Guard against double-binding when Astro view transitions re-fire
-      if (card.dataset.flipcardBound) return;
-      card.dataset.flipcardBound = "1";
+  function initStepReordering() {
+    const root = document.getElementById("step-reorder-activity");
+    if (!root) return;
 
-      function toggle() {
-        const isFlipped = card.getAttribute("aria-pressed") === "true";
-        card.setAttribute("aria-pressed", String(!isFlipped));
+    // Protection contre réinitialisation multiple Astro
+    if (root.dataset.initialized === "true") return;
+    root.dataset.initialized = "true";
+
+    const dataScript = document.getElementById("reorder-data");
+    if (!dataScript || !dataScript.textContent) return;
+
+    let originalSteps: StepData[] = [];
+    try {
+      originalSteps = JSON.parse(dataScript.textContent);
+    } catch (e) {
+      console.error("Erreur de parsing des étapes :", e);
+      return;
+    }
+
+    if (!originalSteps.length) return;
+
+    const slots = Array.from(root.querySelectorAll<HTMLElement>(".reorder-slot"));
+    const pool = root.querySelector<HTMLElement>("#cards-pool");
+    const verifyBtn = root.querySelector<HTMLButtonElement>("#btn-verify");
+    const resetBtn = root.querySelector<HTMLButtonElement>("#btn-reset");
+    const countIndicator = root.querySelector<HTMLElement>("#placed-count-indicator");
+    const feedbackBadge = root.querySelector<HTMLElement>("#feedback-summary-badge");
+    const successRecap = root.querySelector<HTMLElement>("#success-sequence-recap");
+    const summaryList = root.querySelector<HTMLElement>("#summary-ordered-list");
+    const copyBtn = root.querySelector<HTMLButtonElement>("#btn-copy-summary");
+    const copyBtnText = root.querySelector<HTMLElement>("#copy-btn-text");
+    const liveFeedback = root.querySelector<HTMLElement>("#a11y-live-feedback");
+
+    // État de l'exercice
+    let activeGrabbedCard: HTMLElement | null = null;
+    let lockedStepIds: Set<number> = new Set();
+    let currentShuffledSteps: StepData[] = [];
+
+    function announce(message: string) {
+      if (!liveFeedback) return;
+      liveFeedback.textContent = "";
+      setTimeout(() => {
+        if (liveFeedback) liveFeedback.textContent = message;
+      }, 50);
+    }
+
+    // Mélange garanti non résolu
+    function getShuffledSteps(): StepData[] {
+      const copy = [...originalSteps];
+      let shuffled: StepData[];
+      let isIdentical = true;
+      let attempts = 0;
+
+      while (isIdentical && attempts < 50) {
+        attempts++;
+        shuffled = [...copy].sort(() => Math.random() - 0.5);
+        // Vérifier si ce n'est pas l'ordre 1,2,3,4,5
+        isIdentical = shuffled.every((item, i) => item.step === i + 1);
+        if (!isIdentical) {
+          return shuffled;
+        }
+      }
+      // Fallback si très petite liste : inverser simplement
+      return [...copy].reverse();
+    }
+
+    // Création de l'élément carte DOM
+    function createCardElement(stepData: StepData): HTMLElement {
+      const card = document.createElement("div");
+      card.className =
+        "reorder-card relative z-10 w-full h-full min-h-[175px] sm:min-h-[200px] md:min-h-[235px] [aspect-ratio:3/4] rounded-2xl border-[4px] border-[#a6c4ff] bg-white p-3.5 sm:p-4 flex flex-col justify-between items-center text-center shadow-[0_4px_12px_rgba(16,24,40,0.08)] transition-all duration-200 select-none cursor-grab active:cursor-grabbing hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(16,24,40,0.12)] hover:border-[#83abfc] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2F6FED]";
+      
+      card.setAttribute("draggable", "true");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("role", "button");
+      card.setAttribute("aria-grabbed", "false");
+      card.setAttribute(
+        "aria-label",
+        `Étape non numérotée : ${stepData.text}. Appuyez sur Entrée pour saisir.`
+      );
+      card.dataset.stepId = String(stepData.step);
+
+      card.innerHTML = `
+        <div class="card-drag-handle flex items-center justify-center gap-1 opacity-40 text-[#46679f] mb-1 pointer-events-none" aria-hidden="true">
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-current"></span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-current"></span>
+          <span class="inline-block w-1.5 h-1.5 rounded-full bg-current"></span>
+        </div>
+        <p class="card-text text-[13px] sm:text-[14px] leading-[1.5] text-[#3b598b] font-medium my-auto select-none pointer-events-none">
+          ${stepData.text}
+        </p>
+        <div class="card-status-slot mt-auto pt-1 flex items-center justify-center min-h-[18px]">
+          <span class="card-hint text-[10px] sm:text-[11px] font-semibold text-[#82a4d8] opacity-75 inline-flex items-center gap-1">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-80"><path d="M5 9l4-4 4 4"/><path d="M9 5v14"/><path d="M19 15l-4 4-4-4"/><path d="M15 19V5"/></svg>
+            Déplacer
+          </span>
+        </div>
+      `;
+
+      // Gestion Drag & Drop HTML5
+      card.addEventListener("dragstart", (e) => {
+        if (lockedStepIds.has(stepData.step)) {
+          e.preventDefault();
+          return;
+        }
+        card.classList.add("opacity-40", "scale-95");
+        e.dataTransfer?.setData("text/plain", String(stepData.step));
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = "move";
+        }
+      });
+
+      card.addEventListener("dragend", () => {
+        card.classList.remove("opacity-40", "scale-95");
+      });
+
+      // Gestion Clavier & Clic / Tap
+      card.addEventListener("keydown", (e: KeyboardEvent) => {
+        handleCardKeydown(e, card, stepData);
+      });
+
+      card.addEventListener("click", (e) => {
+        // Empêcher action si verrouillée
+        if (lockedStepIds.has(stepData.step)) return;
+        
+        // Mode tap-to-select : si aucune carte saisie, saisir celle-ci
+        if (!activeGrabbedCard) {
+          grabCard(card, stepData);
+        } else if (activeGrabbedCard === card) {
+          ungrabCard(card, "Sélection annulée.");
+        } else {
+          // Si on clique sur une autre carte, changer la sélection
+          ungrabCard(activeGrabbedCard, "");
+          grabCard(card, stepData);
+        }
+      });
+
+      return card;
+    }
+
+    function grabCard(card: HTMLElement, stepData: StepData) {
+      if (lockedStepIds.has(stepData.step)) return;
+
+      if (activeGrabbedCard && activeGrabbedCard !== card) {
+        ungrabCard(activeGrabbedCard, "");
       }
 
-      card.addEventListener("click", toggle);
+      activeGrabbedCard = card;
+      card.setAttribute("aria-grabbed", "true");
+      card.classList.add(
+        "!ring-4",
+        "!ring-[#2F6FED]",
+        "!border-[#2F6FED]",
+        "!scale-[1.03]",
+        "!shadow-[0_12px_24px_rgba(47,111,237,0.25)]",
+        "z-30"
+      );
 
-      card.addEventListener("keydown", (e: KeyboardEvent) => {
-        if (e.key === "Enter" || e.key === " ") {
+      const hint = card.querySelector(".card-hint");
+      if (hint) {
+        hint.innerHTML = `<span class="text-[#2F6FED] font-bold">Prêt à placer</span>`;
+      }
+
+      announce(
+        `Carte saisie : "${stepData.text}". Utilisez les flèches gauche/droite pour choisir un emplacement de 1 à 5, ou bas pour la réserve. Appuyez sur Entrée pour déposer.`
+      );
+    }
+
+    function ungrabCard(card: HTMLElement, message?: string) {
+      card.setAttribute("aria-grabbed", "false");
+      card.classList.remove(
+        "!ring-4",
+        "!ring-[#2F6FED]",
+        "!border-[#2F6FED]",
+        "!scale-[1.03]",
+        "!shadow-[0_12px_24px_rgba(47,111,237,0.25)]",
+        "z-30"
+      );
+
+      const hint = card.querySelector(".card-hint");
+      if (hint && !lockedStepIds.has(Number(card.dataset.stepId))) {
+        hint.innerHTML = `
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="opacity-80"><path d="M5 9l4-4 4 4"/><path d="M9 5v14"/><path d="M19 15l-4 4-4-4"/><path d="M15 19V5"/></svg>
+          Déplacer
+        `;
+      }
+
+      if (activeGrabbedCard === card) {
+        activeGrabbedCard = null;
+      }
+
+      if (message) announce(message);
+    }
+
+    function handleCardKeydown(e: KeyboardEvent, card: HTMLElement, stepData: StepData) {
+      if (lockedStepIds.has(stepData.step)) return;
+
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        if (activeGrabbedCard === card) {
+          // Déposer à la position actuelle ou dans le slot focus
+          ungrabCard(card, `Carte déposée.`);
+        } else {
+          grabCard(card, stepData);
+        }
+        return;
+      }
+
+      if (e.key === "Escape") {
+        if (activeGrabbedCard === card) {
           e.preventDefault();
-          toggle();
+          ungrabCard(card, "Déplacement annulé.");
+        }
+        return;
+      }
+
+      if (!activeGrabbedCard || activeGrabbedCard !== card) return;
+
+      // Déplacement au clavier avec les flèches
+      const currentParentSlot = card.closest(".reorder-slot") as HTMLElement | null;
+      let currentSlotIndex = currentParentSlot ? parseInt(currentParentSlot.dataset.slotId || "0", 10) : 0;
+
+      if (e.key === "ArrowRight" || e.key === "ArrowUp") {
+        e.preventDefault();
+        let targetSlotIndex = currentSlotIndex === 0 ? 1 : Math.min(5, currentSlotIndex + 1);
+        moveCardToSlotIndex(card, targetSlotIndex);
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        let targetSlotIndex = currentSlotIndex === 0 ? 5 : Math.max(1, currentSlotIndex - 1);
+        moveCardToSlotIndex(card, targetSlotIndex);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        // Renvoyer vers le pool
+        moveCardToPool(card);
+      }
+    }
+
+    function moveCardToSlotIndex(card: HTMLElement, slotIndex: number) {
+      const targetSlot = slots.find((s) => s.dataset.slotId === String(slotIndex));
+      if (!targetSlot) return;
+
+      const holder = targetSlot.querySelector<HTMLElement>(".slot-card-holder");
+      if (!holder) return;
+
+      // Si le slot a déjà une carte non verrouillée, échanger
+      const existingCard = holder.querySelector<HTMLElement>(".reorder-card");
+      if (existingCard) {
+        const existingStepId = Number(existingCard.dataset.stepId);
+        if (lockedStepIds.has(existingStepId)) {
+          announce(`L'emplacement ${slotIndex} est déjà verrouillé et validé.`);
+          return;
+        }
+        // Déplacer l'ancienne carte vers l'ancien emplacement ou le pool
+        const previousSlot = card.closest(".reorder-slot")?.querySelector(".slot-card-holder");
+        if (previousSlot) {
+          previousSlot.appendChild(existingCard);
+        } else if (pool) {
+          pool.appendChild(existingCard);
+        }
+      }
+
+      holder.appendChild(card);
+      card.focus();
+      updateState();
+      announce(`Carte déplacée en position ${slotIndex}.`);
+    }
+
+    function moveCardToPool(card: HTMLElement) {
+      if (!pool) return;
+      pool.appendChild(card);
+      card.focus();
+      updateState();
+      announce("Carte replacée dans la zone de départ.");
+    }
+
+    // Configuration des slots comme zones de dépôt
+    slots.forEach((slot) => {
+      const slotId = slot.dataset.slotId;
+      const holder = slot.querySelector<HTMLElement>(".slot-card-holder");
+
+      slot.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        if (e.dataTransfer) e.dataTransfer.dropEffect = "move";
+        slot.classList.add("!border-[#2F6FED]", "!bg-[#dbeafe]/70", "!border-solid");
+      });
+
+      slot.addEventListener("dragleave", () => {
+        slot.classList.remove("!border-[#2F6FED]", "!bg-[#dbeafe]/70", "!border-solid");
+      });
+
+      slot.addEventListener("drop", (e) => {
+        e.preventDefault();
+        slot.classList.remove("!border-[#2F6FED]", "!bg-[#dbeafe]/70", "!border-solid");
+
+        const stepId = e.dataTransfer?.getData("text/plain");
+        if (!stepId) return;
+
+        const card = root.querySelector<HTMLElement>(`.reorder-card[data-step-id="${stepId}"]`);
+        if (!card || !holder) return;
+
+        // Si le slot a déjà une carte
+        const existingCard = holder.querySelector<HTMLElement>(".reorder-card");
+        if (existingCard) {
+          const existingId = Number(existingCard.dataset.stepId);
+          if (lockedStepIds.has(existingId)) {
+            announce(`Emplacement ${slotId} déjà validé.`);
+            return;
+          }
+          // Échanger avec la provenance
+          const prevParent = card.parentElement;
+          if (prevParent) {
+            prevParent.appendChild(existingCard);
+          }
+        }
+
+        holder.appendChild(card);
+        updateState();
+        announce(`Carte déposée en position ${slotId}.`);
+      });
+
+      // Clic sur le slot pour déposer la carte saisie (pour mobiles/tactile)
+      slot.addEventListener("click", () => {
+        if (activeGrabbedCard && holder) {
+          const targetCard = activeGrabbedCard;
+          const targetStepId = Number(targetCard.dataset.stepId);
+          if (lockedStepIds.has(targetStepId)) return;
+
+          const existingCard = holder.querySelector<HTMLElement>(".reorder-card");
+          if (existingCard) {
+            const existingId = Number(existingCard.dataset.stepId);
+            if (lockedStepIds.has(existingId)) {
+              announce(`Emplacement ${slotId} verrouillé.`);
+              return;
+            }
+            const prevParent = targetCard.parentElement;
+            if (prevParent) {
+              prevParent.appendChild(existingCard);
+            }
+          }
+
+          holder.appendChild(targetCard);
+          ungrabCard(targetCard, `Carte déposée en position ${slotId}.`);
+          updateState();
         }
       });
     });
+
+    // Configuration du pool comme zone de dépôt
+    if (pool) {
+      pool.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        pool.classList.add("!border-[#2F6FED]", "!bg-[#e0f2fe]/50");
+      });
+
+      pool.addEventListener("dragleave", () => {
+        pool.classList.remove("!border-[#2F6FED]", "!bg-[#e0f2fe]/50");
+      });
+
+      pool.addEventListener("drop", (e) => {
+        e.preventDefault();
+        pool.classList.remove("!border-[#2F6FED]", "!bg-[#e0f2fe]/50");
+
+        const stepId = e.dataTransfer?.getData("text/plain");
+        if (!stepId) return;
+
+        const card = root.querySelector<HTMLElement>(`.reorder-card[data-step-id="${stepId}"]`);
+        if (!card) return;
+
+        pool.appendChild(card);
+        updateState();
+        announce("Carte remise dans la zone de départ.");
+      });
+
+      pool.addEventListener("click", (e) => {
+        // Si clic direct sur le conteneur du pool avec une carte active
+        if (activeGrabbedCard && (e.target === pool || (e.target as HTMLElement).id === "cards-pool")) {
+          const target = activeGrabbedCard;
+          pool.appendChild(target);
+          ungrabCard(target, "Carte replacée dans la zone de départ.");
+          updateState();
+        }
+      });
+    }
+
+    // Mise à jour de l'état général (bouton vérifier, compteurs)
+    function updateState() {
+      let placedCount = 0;
+      slots.forEach((slot, index) => {
+        const card = slot.querySelector<HTMLElement>(".reorder-card");
+        const placeholder = slot.querySelector<HTMLElement>(".slot-placeholder");
+        if (card) {
+          placedCount++;
+          if (placeholder) placeholder.classList.add("opacity-0");
+          slot.setAttribute("aria-label", `Emplacement étape ${index + 1} : carte présente.`);
+        } else {
+          if (placeholder) placeholder.classList.remove("opacity-0");
+          slot.setAttribute("aria-label", `Emplacement étape ${index + 1}. Actuellement vide.`);
+        }
+      });
+
+      if (countIndicator) {
+        countIndicator.textContent = `${placedCount} / 5 placées`;
+      }
+
+      if (verifyBtn) {
+        verifyBtn.disabled = placedCount < 5;
+      }
+    }
+
+    // Vérification des réponses
+    function verifyPlacement() {
+      let correctCount = 0;
+
+      slots.forEach((slot) => {
+        const slotNumber = parseInt(slot.dataset.slotId || "0", 10);
+        const card = slot.querySelector<HTMLElement>(".reorder-card");
+        if (!card) return;
+
+        const cardStepId = parseInt(card.dataset.stepId || "0", 10);
+        const isCorrect = cardStepId === slotNumber;
+
+        const statusSlot = card.querySelector(".card-status-slot");
+
+        if (isCorrect) {
+          correctCount++;
+          lockedStepIds.add(cardStepId);
+
+          // Style carte verrouillée et correcte
+          card.setAttribute("draggable", "false");
+          card.setAttribute("aria-disabled", "true");
+          card.classList.remove("cursor-grab", "active:cursor-grabbing", "hover:scale-[1.02]", "!border-[#f97316]", "!bg-[#fffaf5]");
+          card.classList.add("!border-[#10b981]", "!bg-[#f0fdf4]", "!cursor-default", "pointer-events-none");
+
+          if (statusSlot) {
+            statusSlot.innerHTML = `
+              <span class="inline-flex items-center gap-1 rounded-full bg-[#10b981] px-2 py-0.5 text-[11px] font-bold text-white shadow-xs">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                Bien placée
+              </span>
+            `;
+          }
+        } else {
+          // Style carte incorrecte mais déplaçable
+          card.classList.remove("!border-[#a6c4ff]");
+          card.classList.add("!border-[#f97316]", "!bg-[#fffaf5]");
+
+          if (statusSlot) {
+            statusSlot.innerHTML = `
+              <span class="inline-flex items-center gap-1 text-[11px] font-bold text-[#ea580c]">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+                À replacer
+              </span>
+            `;
+          }
+        }
+      });
+
+      // Affichage du score
+      if (feedbackBadge) {
+        feedbackBadge.classList.remove("hidden", "bg-emerald-100", "text-emerald-800", "border-emerald-300", "bg-amber-100", "text-amber-800", "border-amber-300");
+        
+        if (correctCount === 5) {
+          feedbackBadge.classList.add("flex", "bg-emerald-100", "text-emerald-800", "border", "border-emerald-300");
+          feedbackBadge.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald-600"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            5/5 bien placées ! Bravo !
+          `;
+          showFinalSuccessRecap();
+        } else {
+          feedbackBadge.classList.add("flex", "bg-amber-100", "text-amber-900", "border", "border-amber-300");
+          feedbackBadge.innerHTML = `
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-600"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            ${correctCount} / 5 bien placée${correctCount > 1 ? "s" : ""} — Réessayez pour les autres !
+          `;
+        }
+      }
+
+      announce(`Résultat : ${correctCount} sur 5 cartes bien placées.`);
+    }
+
+    // Affichage de la séquence complète validée
+    function showFinalSuccessRecap() {
+      if (!successRecap || !summaryList) return;
+
+      summaryList.innerHTML = originalSteps
+        .sort((a, b) => a.step - b.step)
+        .map(
+          (s) => `
+          <li class="flex items-start gap-3 rounded-xl bg-white p-3.5 border border-[#10b981]/20 shadow-xs">
+            <span class="flex items-center justify-center w-6 h-6 rounded-full bg-[#10b981]/15 text-[#065f46] font-extrabold text-xs shrink-0 mt-0.5">
+              ${s.step}
+            </span>
+            <p class="text-sm sm:text-[15px] leading-relaxed text-[#1e293b] m-0 font-medium">
+              ${s.text}
+            </p>
+          </li>
+        `
+        )
+        .join("");
+
+      successRecap.classList.remove("hidden");
+      successRecap.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+
+    // Copie de la trace écrite
+    if (copyBtn) {
+      copyBtn.addEventListener("click", async () => {
+        const textToCopy = originalSteps
+          .sort((a, b) => a.step - b.step)
+          .map((s) => `Étape ${s.step} : ${s.text}`)
+          .join("\n");
+
+        try {
+          await navigator.clipboard.writeText(textToCopy);
+          if (copyBtnText) copyBtnText.textContent = "✓ Résumé copié !";
+          announce("Trace écrite copiée dans le presse-papier.");
+          setTimeout(() => {
+            if (copyBtnText) copyBtnText.textContent = "Copier la trace écrite";
+          }, 2500);
+        } catch (err) {
+          console.error("Échec de la copie :", err);
+        }
+      });
+    }
+
+    // Réinitialisation de l'exercice
+    function resetExercise() {
+      lockedStepIds.clear();
+      activeGrabbedCard = null;
+
+      if (feedbackBadge) {
+        feedbackBadge.className = "hidden";
+        feedbackBadge.innerHTML = "";
+      }
+
+      if (successRecap) {
+        successRecap.classList.add("hidden");
+      }
+
+      // Vider tous les slots
+      slots.forEach((slot) => {
+        const holder = slot.querySelector(".slot-card-holder");
+        if (holder) holder.innerHTML = "";
+      });
+
+      // Vider le pool
+      if (pool) {
+        pool.innerHTML = "";
+        currentShuffledSteps = getShuffledSteps();
+        currentShuffledSteps.forEach((stepData) => {
+          const cardEl = createCardElement(stepData);
+          pool.appendChild(cardEl);
+        });
+      }
+
+      updateState();
+      announce("Exercice réinitialisé. Toutes les cartes sont mélangées dans la zone de départ.");
+    }
+
+    if (verifyBtn) {
+      verifyBtn.addEventListener("click", verifyPlacement);
+    }
+
+    if (resetBtn) {
+      resetBtn.addEventListener("click", resetExercise);
+    }
+
+    // Initialisation au chargement
+    resetExercise();
   }
 
-  // S'exécute quand le DOM est prêt (compatible Astro view transitions)
+  // Support chargement initial et Astro View Transitions
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initFlipCards);
+    document.addEventListener("DOMContentLoaded", initStepReordering);
   } else {
-    initFlipCards();
+    initStepReordering();
   }
-
-  // Support Astro view transitions (si activées)
-  document.addEventListener("astro:page-load", initFlipCards);
+  document.addEventListener("astro:page-load", initStepReordering);
 </script>
