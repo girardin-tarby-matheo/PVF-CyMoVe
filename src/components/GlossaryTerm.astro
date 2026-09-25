@@ -5,7 +5,7 @@ interface Props {
 }
 
 const { term, definition } = Astro.props;
-const tooltipId = `glossary-${term.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
+const tooltipId = `glossary-${crypto.randomUUID()}`;
 ---
 
 <span class="glossary-term">
@@ -46,6 +46,9 @@ const tooltipId = `glossary-${term.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
                     }
                 });
             });
+
+        if (document.documentElement.dataset.glossaryEventsBound) return;
+        document.documentElement.dataset.glossaryEventsBound = "true";
 
         document.addEventListener("click", (event) => {
             const target = event.target as Node;

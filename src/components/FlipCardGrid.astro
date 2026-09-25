@@ -54,12 +54,7 @@ const stepsJson = JSON.stringify(rawSteps);
   <!-- En-tête de l'activité (conforme au design Figma/maquette) -->
   <div class="mb-6">
     <div class="flex items-center gap-3">
-      <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-[#fef3c7] text-[#f59e0b] shadow-xs" aria-hidden="true">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <circle cx="12" cy="12" r="10"></circle>
-          <polyline points="12 6 12 12 16 14"></polyline>
-        </svg>
-      </span>
+      
       <h3 id="step-reorder-title" class="text-xl sm:text-2xl font-bold tracking-tight text-[#081924] m-0">
         Remets les étapes de l'attaque dans l'ordre
       </h3>
@@ -78,16 +73,10 @@ const stepsJson = JSON.stringify(rawSteps);
     aria-atomic="true"
   ></div>
 
-  <!-- Instructions accessibilité clavier masquées visuellement -->
-  <p class="sr-only">
-    Exercice d'ordonnancement accessible : utilisez la touche Tab pour naviguer sur une carte, 
-    appuyez sur Entrée ou Espace pour la saisir, utilisez les flèches directionnelles pour choisir un emplacement de 1 à 5, 
-    puis Entrée pour la déposer ou Échap pour annuler.
-  </p>
 
   <!-- 1. ZONE DES 5 EMPLACEMENTS RÉCEPTEURS (SLOTS) -->
   <div 
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5 sm:gap-4 mb-6" 
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5 sm:gap-4 mb-4" 
     id="slots-container"
     role="region"
     aria-label="Emplacements chronologiques de 1 à 5"
@@ -698,7 +687,7 @@ const stepsJson = JSON.stringify(rawSteps);
           feedbackBadge.classList.add("flex", "bg-amber-100", "text-amber-900", "border", "border-amber-300");
           feedbackBadge.innerHTML = `
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-600"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-            ${correctCount} / 5 bien placée${correctCount > 1 ? "s" : ""} — Réessayez pour les autres !
+            ${correctCount} / 5 bien placée${correctCount > 1 ? "s" : ""} — Réessayez  !
           `;
         }
       }

@@ -4,6 +4,23 @@ import AttackDiagram from "../components/AttackDiagram.astro";
 import FlipCardGrid from "../components/FlipCardGrid.astro";
 import GlossaryCards from "../components/GlossaryCards.astro";
 import GlossaryTerm from "../components/GlossaryTerm.astro";
+import Footer from "../components/Footer.astro";
+import NuageMots from "../components/NuageMots.astro";
+import Starlink from "../components/Starlink.astro";
+import Quiz from "../components/Quiz.astro";
+import carImg from "../assets/car.png";
+import houseImg from "../assets/house.png";
+import CanadaFlag from "../assets/canada.svg";
+import USAFlag from "../assets/usa.svg";
+import JapanFlag from "../assets/japan.svg";
+import RollsRoyceLogo from "../assets/image14.svg";
+import MiniLogo from "../assets/image15.svg";
+import BMWLogo from "../assets/image16.svg";
+import CadenaImg from "../assets/cadena.webp";
+import BlueImg from "../assets/blue.svg";
+import TelephoneImg from "../assets/telephone.svg";
+import WifiImg from "../assets/wifi.svg";
+import SyntheseImg from "../assets/synthese.png";
 
 const toyotaSteps = [
 	{
@@ -32,87 +49,183 @@ const toyotaGlossary = [
 	{
 		term: "Bus CAN",
 		definition:
-			"Le réseau électronique interne qui relie les composants d'une voiture entre eux (moteur, phares, portières...) et leur permet de communiquer.",
+			"Le réseau électronique interne qui permet aux composants d'une voiture de communiquer entre eux.",
 	},
 	{
-		term: "Injection (CAN injection)",
+		term: "Injection CAN",
 		definition:
-			"Le fait d'envoyer un faux message sur ce réseau pour faire croire aux autres composants qu'il est légitime.",
+			"L'envoi d'un faux message sur le réseau pour tromper les autres composants.",
 	},
 	{
 		term: "Immobiliseur",
 		definition:
-			"Le système qui empêche normalement le moteur de démarrer sans la vraie clé.",
+			"Le système qui empêche normalement le moteur de démarrer sans la bonne clé.",
 	},
 	{
 		term: "Authentification",
 		definition:
-			"La vérification qu'un message provient bien de l'expéditeur qu'il prétend être — absente sur le bus CAN classique, ce qui rend l'injection possible.",
+			"La vérification qu'un message vient bien de la personne ou de l'appareil annoncé.",
 	},
 ];
-import NuageMots from "../components/NuageMots.astro";
-import Starlink from "../components/Starlink.astro";
-import Quiz from "../components/Quiz.astro";
-import carImg from "../assets/car.png";
-import houseImg from "../assets/house.png";
-import CanadaFlag from "../assets/canada.svg";
-import USAFlag from "../assets/usa.svg";
-import JapanFlag from "../assets/japan.svg";
-import RollsRoyceLogo from "../assets/image14.svg";
-import MiniLogo from "../assets/image15.svg";
-import BMWLogo from "../assets/image16.svg";
 ---
 
 <Layout>
-	<div
-		class="w-full min-h-screen bg-[#effbfe] text-[#071a27] font-sans antialiased"
-	>
+	<div class="w-full min-h-screen text-[#071a27] font-sans antialiased">
 		<main
-			class="w-full max-w-[100%] pt-[54px] pr-[0px] pb-[160px] pl-[0px] [@media(max-width:800px)]:p-4 [@media(max-width:800px)]:pb-[80px] flex flex-col items-stretch justify-center"
+			class="w-full max-w-[100%] pb-[160px] [@media(max-width:800px)]:pb-[80px] flex flex-col items-stretch justify-center"
 		>
 			<!-- HERO / INTRODUCTION -->
 			<section
-				class="scroll-mt-7 flex flex-col align-bottom gap-20"
+				class="scroll-mt-7 min-h-[calc(100vh-3rem)] flex flex-col justify-start pt-4 md:pt-8 mb-20"
 				id="introduction"
 			>
-				<div class="flex flex-col gap-5 w-[100%]">
-					<h1
-						class="mb-[11px] text-[#071923] text-[clamp(38px,5vw,66px)] leading-[1] tracking-[-0.065em] font-bold"
+				<!-- Badges / Tags -->
+				<div class="flex flex-wrap items-center gap-3 mb-6 md:mb-8">
+					<span
+						class="inline-flex items-center px-4 py-1.5 text-[#3b879e] text-[13.5px] font-medium tracking-wide"
 					>
-						De la cybersécurité pour les véhicules, ça existe
-						vraiment ?
-					</h1>
-					<p class="text-[#39505b] text-[20px] leading-[1.68] m-0">
-						Les enjeux de la <GlossaryTerm
-							term="cybersécurité"
-							definition="L'ensemble des méthodes pour protéger les appareils, les réseaux et les informations contre les attaques."
-						/> sont aujourd’hui partout : dans nos usages, nos outils
-						et les services que nous utilisons chaque jour. Ce parcours
-						propose une lecture simple et concrète de situations réelles
-						pour mieux reconnaître les risques, adopter les bons réflexes
-						et protéger les données qui comptent. <strong
-							>Plus un véhicule est connecté plus il est sensible
-							à l'hacking</strong
-						>
-					</p>
+						Publication : 25/09/2026
+					</span>
+					<span
+						class="inline-flex items-center px-4 py-1.5 text-[#3b879e] text-[13.5px] font-medium tracking-wide"
+					>
+						Temps de lecture estimé: 25 min
+					</span>
 				</div>
-				<div>
-					<figure
-						class="w-[70%] mb-[100px] display-block middle m-auto"
+
+				<!-- Main 2-column Hero -->
+				<div
+					class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-8 items-center my-auto"
+				>
+					<!-- Left Column: Title and intro paragraphs -->
+					<div
+						class="lg:col-span-7 flex flex-col gap-10 max-w-[620px]"
+					>
+						<h1
+							class="Century Gothic text-[#0B5367] text-[clamp(48px,5.5vw,72px)] leading-[1.06] font-bold tracking-[-0.035em] text-balance m-0"
+						>
+							La menace de la<br />
+							piraterie<br />
+							automobile<br />
+						</h1>
+
+						<div
+							class="top-5 text-[#345866] text-[18px] md:text-[19px] leading-[1.65] font-mona font-normal"
+						>
+							<p class="m-0">
+								Ce module propose une lecture simple et concrète
+								de situations réelles, pour mieux reconnaître
+								les risques, adopter les bons réflexes, et
+								protéger les données qui comptent.
+								<br />
+								Car la règle est simple, plus un véhicule est connecté,
+								plus sa surface d'exposition aux cyberattaques s'élargit.
+							</p>
+						</div>
+					</div>
+
+					<!-- Right Column: Clustered Connected Vehicle Risk SVGs -->
+					<div
+						class="lg:col-span-5 relative flex items-center justify-center lg:justify-end w-full py-4"
 					>
 						<div
-							class="overflow-hidden aspect-[16/8.5] bg-[#061521] border-[4px]"
+							class="hero-icons-cluster relative w-[340px] sm:w-[420px] md:w-[480px] lg:w-[460px] xl:w-[510px] aspect-[1/0.92]"
 						>
-							<video
-								class="block w-full h-full object-cover"
-								src="https://api.preview.4hfactory.tech/storage/companies/2_6BZLRA9PU5/1486_XB5J2PAIOL/7320_19GEQTXSKH.webm"
-								controls
-								playsinline
-								preload="metadata"
-								aria-label="Vidéo d’introduction au parcours"
-							></video>
+							<!-- Telephone Circle (top-left) -->
+							<div class="cluster-icon icon-phone">
+								<img
+									src={TelephoneImg.src}
+									alt="Appels connectés"
+									width="144"
+									height="128"
+									loading="eager"
+								/>
+							</div>
+
+							<!-- Bluetooth Circle (top-right) -->
+							<div class="cluster-icon icon-bluetooth">
+								<img
+									src={BlueImg.src}
+									alt="Bluetooth"
+									width="250"
+									height="226"
+									loading="eager"
+								/>
+							</div>
+
+							<!-- Padlock Circle (main hero icon) -->
+							<div class="cluster-icon icon-padlock">
+								<img
+									src={CadenaImg.src}
+									alt="Cadenas ouvert vulnérable"
+									width="480"
+									height="471"
+									loading="eager"
+								/>
+							</div>
+
+							<!-- Wifi Circle (bottom-right) -->
+							<div class="cluster-icon icon-wifi">
+								<img
+									src={WifiImg.src}
+									alt="Wi-Fi connecté"
+									width="187"
+									height="184"
+									loading="eager"
+								/>
+							</div>
 						</div>
-					</figure>
+					</div>
+				</div>
+
+				<!-- Vidéo d'introduction -->
+
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mx-auto">
+					<div class="mt-20 md:mt-28 mb-12">
+						<figure
+							class="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(7,40,58,0.09)] border-2 border-[#bfe7f1]"
+						>
+							<div
+								class="overflow-hidden aspect-[16/8.5] bg-[#061521]"
+							>
+								<video
+									class="block w-full h-full object-cover"
+									src="https://api.preview.4hfactory.tech/storage/companies/2_6BZLRA9PU5/1486_XB5J2PAIOL/7320_19GEQTXSKH.webm"
+									controls
+									playsinline
+									preload="metadata"
+									aria-label="Vidéo d’introduction au parcours"
+								></video>
+							</div>
+						</figure>
+					</div>
+					<div class="flex flex-col gap-4 justify-center">
+						<p class="mb-[10px] text-[#5B7688] text-[18px]">
+							Les enjeux de la <GlossaryTerm
+								term="cybersécurité"
+								definition="Les méthodes utilisées pour protéger les appareils, les réseaux et les informations contre les attaques."
+							/> sont aujourd’hui partout : dans nos usages, nos outils
+							et les services que nous utilisons chaque jour.
+						</p>
+						<p class="text-[#5B7688] text-[18px]">
+							Le secteur automobile a vu les cyberattaques le
+							visant augmenter de 225 % entre 2019 et 2022, avec
+							parmi les méthodes les plus fréquentes le vol de
+							véhicule par <GlossaryTerm
+								term="relayage de signal"
+								definition="Le fait de prolonger le signal de la vraie clé pour faire croire à la voiture qu'elle est juste à côté."
+							/> et l'exploitation des systèmes d'<GlossaryTerm
+								term="infodivertissement"
+								definition="Le système qui regroupe l'écran, la musique, le GPS et parfois la connexion Internet de la voiture."
+							/>.
+						</p>
+						<div
+							class="justify-center text-sky-500 text-2xl font-bold font-['Mona_Sans'] leading-10"
+						>
+							Plus un véhicule est connecté, plus son degré
+							d'exposition aux cyberattaques s'élargit.
+						</div>
+					</div>
 				</div>
 			</section>
 
@@ -151,7 +264,6 @@ import BMWLogo from "../assets/image16.svg";
 					/> et de déverrouiller les portes sans la clé.
 				</p>
 				<FlipCardGrid steps={toyotaSteps} />
-
 				<GlossaryCards terms={toyotaGlossary} />
 
 				<div
@@ -163,17 +275,34 @@ import BMWLogo from "../assets/image16.svg";
 						À retenir
 					</h3>
 					<ul
-						class="mt-3 mb-0 pl-5 text-[#46606b] text-[17px] leading-[1.6]"
+						class="mt-3 mb-0 pl-0 text-[#46606b] text-[17px] leading-[1.6]"
 					>
 						<li>
-							C’est fou ce qu’on peut faire en piratant un élément
-							aussi secondaire qu’un simple phare !
+							En 2023, de nombreux cas réels et témoignages ont
+							mis en lumière une méthode de vol redoutable
+							touchant des véhicules Toyota et Lexus : l'injection
+							de messages malveillants directement sur le réseau
+							CAN (le bus de communication interne de la voiture)
+							en se branchant sur les câbles du phare avant.
 						</li>
+						<br />
 						<li>
-							Avant que les véhicules ne deviennent de plus en
-							plus connectés, pirater une voiture nécessitait
-							généralement une intrusion physique, comme dans
-							cette attaque. Mais ça, c’était le monde d’avant.
+							Cette technique, dite « d'injection CAN », permet à
+							un attaquant de simuler la présence de la clé
+							officielle en quelques secondes seulement. Le
+							système d'antidémarrage est ainsi dupé de
+							l'intérieur, permettant d'ouvrir et de démarrer la
+							voiture sans laisser la moindre trace d'effraction.
+						</li>
+						<br />
+						<li>
+							Ce cas marque les esprits car il concrétise une peur
+							quotidienne : le vol en pleine rue, sous les
+							fenêtres, de manière totalement silencieuse et
+							ultra-rapide. Il rappelle que la sécurité d'un
+							véhicule moderne ne dépend pas seulement de ses
+							clés, mais aussi de la protection physique de ses
+							connexions électroniques externes.
 						</li>
 					</ul>
 				</div>
@@ -211,8 +340,54 @@ import BMWLogo from "../assets/image16.svg";
 				<p class="mb-4 text-[#0879ae] text-[17px] font-bold">
 					Répondez aux questions ci-dessous pour en découvrir plus.
 				</p>
-
-				<Quiz />
+				<div
+					class="flex flex-auto gap-5 align-middle justify-center display-block items-start"
+				>
+					<div class="w-100% max-w-[600px]">
+						<iframe
+							width="600"
+							height="315"
+							src="https://www.youtube.com/embed/aVlYuPzmJoY?si=MTOEZBbc3XTQcldI"
+							title="YouTube video player"
+							frameborder="0"
+							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+							referrerpolicy="strict-origin-when-cross-origin"
+							allowfullscreen
+						>
+						</iframe>
+						<p
+							class="mb-[10px] text-[#46606b] text-[18px] leading-[1.65] mt-7 max-w-[560px]"
+						>
+							<ul>
+								<li>
+									Derrière cette attaque se cachent des
+									chercheurs belges qui ont exploité un
+									<GlossaryTerm
+										term="chiffrement"
+										definition="Le fait de rendre un message illisible sans une clé pour le lire."
+									/> sans contact obsolète (seulement 40 bits).
+									L'aspect le plus marquant réside dans l'accessibilité
+									de la méthode : le matériel nécessaire coûte environ
+									600 euros et l'opération ne prend que quelques
+									secondes à proximité de la cible.
+								</li>
+								<br />
+								<li>
+									Cet événement démontre qu'une grande marque
+									technologique peut être <GlossaryTerm
+										term="vulnérable"
+										definition="Qui présente une faiblesse pouvant être exploitée."
+									/> à cause d'un composant tiers défaillant. Pour
+									contrer ce risque, Tesla a corrigé le problème
+									via des mises à jour logicielles à distance et
+									a instauré l'option « PIN to Drive », exigeant
+									un code secret sur l'écran pour démarrer le véhicule.
+								</li>
+							</ul>
+						</p>
+					</div>
+					<Quiz />
+				</div>
 
 				<div
 					class="mt-10 border-l-4 border-[#08a1d4] bg-white px-6 py-5 shadow-[0_10px_25px_rgba(11,40,80,0.05)] rounded-2xl"
@@ -225,10 +400,13 @@ import BMWLogo from "../assets/image16.svg";
 					<p
 						class="mt-3 mb-0 text-[#46606b] text-[17px] leading-[1.6]"
 					>
-						Aujourd'hui, même nos clés et nos smartphones
-						communiquent avec le véhicule. Avec autant d'accès
-						différents, un hacker a l'embarras du choix pour tenter
-						de le pirater.
+						Cette attaque s'appuie sur un matériel accessible pour
+						environ 600 euros exploitant une clé de chiffrement
+						obsolète de 40 bits. Pour contrer ce type de
+						vulnérabilité et empêcher le vol malgré le clonage,
+						l'activation de l'option de sécurité « PIN to Drive »
+						(exigeant la saisie d'un code secret sur l'écran de
+						bord) s'avère indispensable.
 					</p>
 				</div>
 			</section>
@@ -260,8 +438,7 @@ import BMWLogo from "../assets/image16.svg";
 					pratique peut devenir un <GlossaryTerm
 						term="vecteur d'exposition"
 						definition="Un moyen par lequel une information ou un système peut être exposé à un risque."
-					/>
-					lorsqu’elle n’est pas suffisamment protégée.
+					/> lorsqu’elle n’est pas suffisamment protégée.
 				</p>
 				<p class="mb-4 text-[#0879ae] text-[17px] font-bold">
 					Explorez le scénario ci-dessous.
@@ -276,15 +453,49 @@ import BMWLogo from "../assets/image16.svg";
 					>
 						À retenir
 					</h3>
-					<p
-						class="mt-3 mb-0 text-[#46606b] text-[17px] leading-[1.6]"
+					<ul
+						class="mt-3 mb-0 pl-0 text-[#46606b] text-[17px] leading-[1.6]"
 					>
-						Plus les véhicules sont connectés, plus le risque d'<GlossaryTerm
-							term="usurpation d'identité"
-							definition="Le fait de se faire passer pour une autre personne ou un autre appareil."
-						/> augmente. Il est donc essentiel de pouvoir vérifier l'identité
-						des véhicules et des systèmes avec lesquels ils communiquent.
-					</p>
+						<li>
+							En 2015, une faille majeure touchant le système BMW
+							ConnectedDrive a été mise au jour grâce à un audit
+							de l'ADAC. Ce cas marque les esprits car il écorne
+							l'image d'une grande marque de prestige réputée pour
+							sa rigueur, tout en affectant plus de 2,2 millions
+							de véhicules (BMW, Mini et Rolls-Royce).
+						</li>
+						<br />
+						<li>
+							La vulnérabilité résidait dans la liaison sans fil
+							entre les serveurs du constructeur et la <GlossaryTerm
+								term="carte SIM"
+								definition="La petite puce qui permet à un appareil de se connecter à un réseau mobile."
+							/> intégrée aux véhicules. En exploitant des faiblesses
+							dans le <GlossaryTerm
+								term="protocole de communication"
+								definition="L'ensemble des règles utilisées pour faire communiquer des appareils."
+							/> et l'absence de
+							<GlossaryTerm
+								term="chiffrement"
+								definition="Le fait de rendre un message illisible sans une clé pour le lire."
+							/> robuste pour certains échanges, des chercheurs ont
+							pu <GlossaryTerm
+								term="intercepter"
+								definition="Récupérer un message pendant qu'il circule entre deux appareils."
+							/> les signaux et simuler de fausses connexions.
+						</li>
+						<br />
+						<li>
+							Cette intrusion a permis d'ouvrir les portières à
+							distance sans clé physique, démontrant que les
+							constructeurs de luxe doivent faire face aux mêmes
+							défis de cybersécurité que les entreprises
+							informatiques, la sécurité des <GlossaryTerm
+								term="logiciels embarqués"
+								definition="Les programmes installés directement dans un appareil, comme une voiture."
+							/> devenant aussi cruciale que la robustesse mécanique.
+						</li>
+					</ul>
 				</div>
 				<!-- BLOCS MÉTRIQUES CAS 2 -->
 				<h3
@@ -397,18 +608,51 @@ import BMWLogo from "../assets/image16.svg";
 						À retenir
 					</p>
 					<ul
-						class="mt-3 mb-0 pl-5 text-[#46606b] text-[17px] leading-[1.6]"
+						class="mt-3 mb-0 pl-0 text-[#46606b] text-[17px] leading-[1.6]"
 					>
 						<li>
-							Hacker un véhicule peut aujourd'hui se faire depuis
-							le canapé de son salon, sans même sortir de chez
-							soi.
+							Des chercheurs en cybersécurité ont mis en évidence
+							une <GlossaryTerm
+								term="vulnérabilité"
+								definition="Une faiblesse dans un système qu'une personne malveillante peut exploiter."
+							/> critique dans le <GlossaryTerm
+								term="portail d'administration"
+								definition="Une page réservée aux employés pour gérer un service."
+							/> du service Starlink de Subaru, affectant des centaines
+							de milliers de véhicules. En exploitant des failles informatiques
+							(telles qu'une réinitialisation de mot de passe sans jeton
+							de confirmation et un contournement de la <GlossaryTerm
+								term="double authentification"
+								definition="Une protection qui demande deux preuves pour vérifier l'identité d'une personne."
+							/>), ils ont pu s'emparer de comptes employés.
 						</li>
+						<br />
 						<li>
-							Hacker un véhicule, ce n'est pas uniquement le
-							prendre en contrôle ou l'ouvrir pour le voler : il
-							contient aussi des informations sensibles qu'il est
-							essentiel de protéger.
+							Cette intrusion a révélé un accès total de type 							<GlossaryTerm
+								term="administrateur"
+								definition="Un compte qui possède beaucoup de droits pour gérer un système."
+							/> permettant non seulement de contrôler à distance les
+							véhicules (verrouillage, démarrage, <GlossaryTerm
+								term="géolocalisation"
+								definition="Le fait de déterminer l'endroit où se trouve un appareil ou un véhicule."
+							/> en temps réel), mais surtout d'accéder à une année
+							d'historique de déplacements des conducteurs et à des
+							informations <GlossaryTerm
+								term=" données personnelles"
+								definition="Des informations qui permettent de reconnaître ou de contacter une personne."
+							/> sensibles (coordonnées, numéros de téléphone, données
+							de facturation).
+						</li>
+						<br />
+						<li>
+							Ce cas illustre à quel point la protection des
+							données personnelles est devenue indissociable de la
+							sécurité des objets connectés. Il rappelle que la
+							confiance envers une marque réputée ne suffit pas et
+							que les constructeurs automobiles doivent
+							impérativement sécuriser l'ensemble de leurs
+							serveurs et portails administratifs pour préserver
+							la vie privée des usagers.
 						</li>
 					</ul>
 				</div>
@@ -596,8 +840,69 @@ import BMWLogo from "../assets/image16.svg";
 				</p>
 			</section>
 			<NuageMots />
+
+			<!-- AFFICHE DE SYNTHÈSE -->
+			<section
+				class="py-10 border-t border-[#b8e5f1] scroll-mt-7"
+				id="affiche-synthese"
+			>
+				<span
+					class="text-[#08a1d4] text-[12px] font-extrabold tracking-[0.13em] uppercase"
+					>Affiche de synthèse</span
+				>
+				<h2
+					class="my-3 text-[#081924] text-[clamp(22px,2.8vw,38px)] leading-[1.1] tracking-[-0.052em] font-bold"
+				>
+					Téléchargez l'affiche récapitulative
+				</h2>
+				<p class="text-[#46606b] text-[18px] leading-[1.6] mb-6">
+					Cliquez sur l'image pour télécharger l'affiche de synthèse
+					en haute résolution.
+				</p>
+				<a
+					href={SyntheseImg.src}
+					download="affiche-synthese-cymove.png"
+					class="group relative inline-block rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(7,40,58,0.12)] border-2 border-[#bfe7f1] cursor-pointer transition-transform duration-300 hover:scale-[1.015] hover:shadow-[0_24px_56px_rgba(7,40,58,0.18)] focus:outline-none focus:ring-4 focus:ring-[#08a1d4]/40"
+					aria-label="Télécharger l'affiche de synthèse"
+					title="Cliquer pour télécharger l'affiche"
+				>
+					<img
+						src={SyntheseImg.src}
+						alt="Affiche de synthèse CyMoVe"
+						class="block w-full max-w-40 h-auto"
+						loading="lazy"
+					/>
+					<!-- Overlay au survol -->
+					<div
+						class="absolute inset-0 bg-[#081924]/0 group-hover:bg-[#081924]/30 transition-all duration-300 flex items-center justify-center"
+					>
+						<div
+							class="opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center gap-2 text-white"
+						>
+							<svg
+								xmlns="http://www.w3.org/2000/svg"
+								class="w-12 h-12 drop-shadow-lg"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V4"
+								></path>
+							</svg>
+							<span class="text-lg font-bold drop-shadow"
+								>Télécharger</span
+							>
+						</div>
+					</div>
+				</a>
+			</section>
 		</main>
 	</div>
+	<Footer />
 </Layout>
 
 <style>
@@ -716,3 +1021,63 @@ import BMWLogo from "../assets/image16.svg";
 		}
 	});
 </script>
+
+<style>
+	.hero-icons-cluster {
+		position: relative;
+		width: 100%;
+		user-select: none;
+	}
+
+	.cluster-icon {
+		position: absolute;
+		transition:
+			transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1),
+			filter 0.45s ease;
+	}
+
+	.cluster-icon img {
+		display: block;
+		width: 100%;
+		height: auto;
+		pointer-events: none;
+	}
+
+	/* Telephone (top-left) */
+	.icon-phone {
+		width: 20%;
+		left: -1%;
+		top: 5%;
+		z-index: 2;
+		filter: drop-shadow(0 6px 14px rgba(97, 165, 196, 0.25));
+		rotate: 100deg;
+	}
+
+	/* Bluetooth (top-right) */
+	.icon-bluetooth {
+		width: 32.5%;
+		right: 1.5%;
+		top: 1%;
+		z-index: 2;
+		filter: drop-shadow(0 10px 22px rgba(0, 36, 52, 0.16));
+		rotate: 180deg;
+	}
+
+	/* Central Padlock (main hero icon) */
+	.icon-padlock {
+		width: 66%;
+		left: 8%;
+		top: 18%;
+		z-index: 4;
+		filter: drop-shadow(0 16px 36px rgba(8, 66, 92, 0.18));
+	}
+
+	/* Wifi (bottom-right) */
+	.icon-wifi {
+		width: 25%;
+		right: 3%;
+		bottom: 7%;
+		z-index: 2;
+		filter: drop-shadow(0 8px 20px rgba(25, 94, 125, 0.2));
+	}
+</style>

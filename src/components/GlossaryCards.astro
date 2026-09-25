@@ -29,32 +29,23 @@ const glossaryItems: GlossaryItem[] = terms ?? (
   <div class="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
     <div>
       <div class="flex items-center gap-2.5">
-        <span class="flex items-center justify-center w-8 h-8 rounded-lg bg-[#e0f2fe] text-[#0284c7]">
-          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-0.5-5H20"/>
-          </svg>
-        </span>
+      
         <h3 id="glossary-section-title" class="text-xl sm:text-2xl font-bold tracking-tight text-[#081924]">
-          Glossaire — Notions clés
+          Notions clés
         </h3>
       </div>
       <p class="mt-1 text-[15px] text-[#46606b]">
         Devinez la définition de chaque mot, puis cliquez sur la carte pour vérifier la réponse.
       </p>
     </div>
-    <span class="self-start sm:self-auto inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[#e0f7fa] text-[#00798c]">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-        <path d="M17 1l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 23l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
-      </svg>
-      Cartes à retourner
-    </span>
+   
   </div>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+  <div class="grid grid-cols-1 justify-items-center gap-4 sm:grid-cols-2 md:grid-cols-4">
     {glossaryItems.map((item, idx) => (
       <button
         type="button"
-        class="group block w-full cursor-pointer select-none appearance-none border-0 bg-transparent p-0 text-left [aspect-ratio:3/4] [font:inherit] [perspective:900px] [-webkit-tap-highlight-color:transparent] [filter:drop-shadow(0_4px_12px_rgba(16,24,40,0.08))] transition-[filter] duration-200 ease-in-out hover:[filter:drop-shadow(0_12px_28px_rgba(16,24,40,0.16))] focus-visible:rounded-2xl focus-visible:outline-[3px] focus-visible:outline-[#107AA5] focus-visible:outline-offset-4"
+        class="group block w-full max-w-[280px] cursor-pointer select-none appearance-none border-0 bg-transparent p-0 text-left [aspect-ratio:3/4] [font:inherit] [perspective:900px] [-webkit-tap-highlight-color:transparent] [filter:drop-shadow(0_4px_12px_rgba(16,24,40,0.08))] transition-[filter] duration-200 ease-in-out hover:[filter:drop-shadow(0_12px_28px_rgba(16,24,40,0.16))] focus-visible:rounded-2xl focus-visible:outline-[3px] focus-visible:outline-[#107AA5] focus-visible:outline-offset-4"
         data-glossary-card
         aria-pressed="false"
         aria-label={`Carte glossaire : ${item.term}. Cliquez pour afficher la définition.`}

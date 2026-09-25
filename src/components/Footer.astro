@@ -1,0 +1,242 @@
+---
+import partenaire1 from "../assets/partenaire1.svg";
+import partenaire2 from "../assets/partenaire2.svg";
+import partenaire3 from "../assets/partenaire3.svg";
+import partenaire4 from "../assets/partenaire4.svg";
+import partenaire5 from "../assets/partenaire5.svg";
+import partenaire6 from "../assets/partenaire6.svg";
+import partenaire7 from "../assets/partenaire7.svg";
+import partenaire8 from "../assets/partenaire8.svg";
+
+const partenaires = [
+    { src: partenaire1.src, alt: "Partenaire 1" },
+    { src: partenaire2.src, alt: "Partenaire 2" },
+    { src: partenaire3.src, alt: "Partenaire 3" },
+    { src: partenaire4.src, alt: "Partenaire 4" },
+    { src: partenaire5.src, alt: "Partenaire 5" },
+    { src: partenaire6.src, alt: "Partenaire 6" },
+    { src: partenaire7.src, alt: "Partenaire 7" },
+    { src: partenaire8.src, alt: "Partenaire 8" },
+];
+---
+
+<div class="py-12 px-0 md:px-0 relative overflow-hidden">
+    <!-- Effet lumineux subtil en arrière-plan -->
+    <div
+        class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-32 pointer-events-none"
+    >
+    </div>
+
+    <div class="space-y-6 relative z-10 mx-auto">
+        <div>
+            <h3
+                class="text-sm font-bold uppercase tracking-wider text-blue-900"
+            >
+                Sources & Références documentaires
+            </h3>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Source 1 : Ken Tindell - CAN Injection -->
+            <a
+                href="https://kentindell.github.io/2023/04/03/can-injection/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group p-4 rounded-xl bg-white border border-[#E2EEF5] hover:border-blue-400 hover:shadow-md transition-all duration-300 flex items-start space-x-3"
+            >
+                <div
+                    class="p-2 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                >
+                    <i class="fa-solid fa-link text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p
+                        class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide"
+                    >
+                        Source du cas 01
+                    </p>
+                    <p
+                        class="text-sm font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors"
+                    >
+                        Attaques par Injection CAN
+                    </p>
+                    <span
+                        class="text-[11px] text-blue-600 font-medium flex items-center mt-1"
+                    >
+                        Consulter <span
+                            class="ml-1.5 text-[12px] transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                            >↗</span
+                        >
+                    </span>
+                </div>
+            </a>
+
+            <!-- Source 2 : Wired - Tesla Model S Key Fob -->
+            <a
+                href="https://www.wired.com/story/hackers-steal-tesla-model-s-seconds-key-fob"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group p-4 rounded-xl bg-white border border-[#E2EEF5] hover:border-blue-400 hover:shadow-md transition-all duration-300 flex items-start space-x-3"
+            >
+                <div
+                    class="p-2 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                >
+                    <i class="fa-solid fa-file-shield text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p
+                        class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide"
+                    >
+                        Source du cas 02
+                    </p>
+                    <p
+                        class="text-sm font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors"
+                    >
+                        Vol de Tesla via Clé sans fil
+                    </p>
+                    <span
+                        class="text-[11px] text-blue-600 font-medium flex items-center mt-1"
+                    >
+                        Consulter <span
+                            class="ml-1.5 text-[12px] transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                            >↗</span
+                        >
+                    </span>
+                </div>
+            </a>
+
+            <!-- Source 3 : FIA - BMW Security Loopholes -->
+            <a
+                href="https://www.fiaregion1.com/wp-content/uploads/2015/01/BMW-security-loopholes.pdf"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group p-4 rounded-xl bg-white border border-[#E2EEF5] hover:border-blue-400 hover:shadow-md transition-all duration-300 flex items-start space-x-3"
+            >
+                <div
+                    class="p-2 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                >
+                    <i class="fa-solid fa-shield-halved text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p
+                        class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide"
+                    >
+                        Source du cas 03
+                    </p>
+                    <p
+                        class="text-sm font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors"
+                    >
+                        Failles de Sécurité BMW (FIA)
+                    </p>
+                    <span
+                        class="text-[11px] text-blue-600 font-medium flex items-center mt-1"
+                    >
+                        Consulter <span
+                            class="ml-1.5 text-[12px] transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                            >↗</span
+                        >
+                    </span>
+                </div>
+            </a>
+
+            <!-- Source 4 : Wired - Subaru Location Tracking -->
+            <a
+                href="https://www.wired.com/story/subaru-location-tracking-vulnerabilities"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group p-4 rounded-xl bg-white border border-[#E2EEF5] hover:border-blue-400 hover:shadow-md transition-all duration-300 flex items-start space-x-3"
+            >
+                <div
+                    class="p-2 rounded-lg bg-blue-50 text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+                >
+                    <i class="fa-solid fa-book-open text-sm"></i>
+                </div>
+                <div class="flex-1 min-w-0">
+                    <p
+                        class="text-[11px] font-semibold text-slate-400 uppercase tracking-wide"
+                    >
+                        Source du cas 04
+                    </p>
+                    <p
+                        class="text-sm font-bold text-slate-800 truncate group-hover:text-blue-600 transition-colors"
+                    >
+                        Vulnérabilités de Géolocalisation
+                    </p>
+                    <span
+                        class="text-[11px] text-blue-600 font-medium flex items-center mt-1"
+                    >
+                        Consulter <span
+                            class="ml-1.5 text-[12px] transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"
+                            >↗</span
+                        >
+                    </span>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Section Partenaires en Scroll Infini -->
+    <div class="mt-15">
+        <div class="flex items-center justify-between mb-6 mx-auto">
+            <div class="flex items-center space-x-3">
+                <h3
+                    class="text-sm font-bold uppercase tracking-wider text-blue-900"
+                >
+                    Nos Partenaires & Institutions
+                </h3>
+            </div>
+        </div>
+
+        <!-- Conteneur du carrousel -->
+        <div
+            class="relative w-full overflow-hidden flex [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-128px),transparent_100%)]"
+        >
+            <div
+                class="flex animate-infinite-scroll space-x-16 items-center py-4 shrink-0"
+            >
+                {
+                    partenaires.map((partenaire) => (
+                        <div class="flex items-center justify-center min-w-[150px]">
+                            <img
+                                src={partenaire.src}
+                                alt={partenaire.alt}
+                                class="max-h-28 w-auto object-contain"
+                            />
+                        </div>
+                    ))
+                }
+            </div>
+            <div
+                class="flex animate-infinite-scroll space-x-16 items-center py-4 shrink-0"
+                aria-hidden="true"
+            >
+                {
+                    partenaires.map((partenaire) => (
+                        <div class="flex items-center justify-center min-w-[150px]">
+                            <img
+                                src={partenaire.src}
+                                alt={partenaire.alt}
+                                class="max-h-28 w-auto object-contain"
+                            />
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes infinite-scroll {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-100%);
+        }
+    }
+
+    .animate-infinite-scroll {
+        animation: infinite-scroll 30s linear infinite;
+    }
+</style>

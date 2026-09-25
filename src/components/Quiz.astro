@@ -1,7 +1,7 @@
 <!-- QUIZ CARD -->
 <div
     id="quiz-container"
-    class="relative w-full max-w-[680px] min-h-auto mx-auto mt-[38px] py-[30px] px-[35px] bg-[linear-gradient(345.37deg,rgba(255,255,255,0.63)-38.59%,#107AA5_138.59%)] shadow-[0px_18px_48px_rgba(6,27,43,0.086),inset_0px_1px_0px_rgba(255,255,255,0.86)] rounded-[24px] overflow-hidden [@media(max-width:840px)]:py-[20px] [@media(max-width:840px)]:px-[20px]"
+    class="relative w-full max-w-[680px] min-h-auto mx-auto mt-0 py-[30px] px-[35px] bg-[linear-gradient(345.37deg,rgba(255,255,255,0.63)-38.59%,#107AA5_138.59%)] shadow-[0px_18px_48px_rgba(6,27,43,0.086),inset_0px_1px_0px_rgba(255,255,255,0.86)] rounded-[24px] overflow-hidden [@media(max-width:840px)]:py-[20px] [@media(max-width:840px)]:px-[20px]"
 >
     <div class="flex justify-between items-center w-full mb-4">
         <span
@@ -36,47 +36,47 @@
     const quizData = [
         {
             question:
-                "Combien de temps faut-il pour cloner une clé Tesla à proximité du porte-clé ?",
+                "Quel est le coût approximatif du matériel nécessaire pour réaliser cette attaque ?",
             options: [
-                "Quelques secondes",
-                "Quelques minutes",
-                "Quelques heures",
-                "Quelques jours",
-            ],
-            answer: 0,
-        },
-        {
-            question:
-                "Combien de temps faut-il pour cloner une clé Tesla à proximité du véhicule ?",
-            options: [
-                "Quelques secondes",
-                "Quelques minutes",
-                "Quelques heures",
-                "Quelques jours",
-            ],
-            answer: 0,
-        },
-        {
-            question:
-                "Combien de temps faut-il pour cloner une clé Tesla si l’attaquant dispose d’un relais ?",
-            options: [
-                "Moins d’une seconde",
-                "Quelques secondes",
-                "Quelques minutes",
-                "Quelques heures",
+                "60 euros",
+                "600 euros",
+                "6 000 euros",
+                "60 000 euros",
             ],
             answer: 1,
         },
         {
             question:
-                "Combien de temps faut-il pour cloner une clé Tesla si la clé est laissée dans un sac ?",
+                "Quelle était la faiblesse principale du chiffrement utilisé par la clé Tesla à l'époque ?",
             options: [
-                "Quelques secondes",
-                "Quelques minutes",
-                "Quelques heures",
-                "Impossible dans ce cas",
+                "Un chiffrement de seulement 40 bits",
+                "Une absence totale de chiffrement",
+                "Un mot de passe par défaut très simple",
+                "Une connexion filaire obligatoire",
             ],
             answer: 0,
+        },
+        {
+            question:
+                "Quelle solution Tesla a-t-elle principalement proposée pour renforcer la sécurité au démarrage ?",
+            options: [
+                "L'obligation d'utiliser une clé USB",
+                "L'option « PIN to Drive » (code secret)",
+                "La suppression définitive des clés sans contact",
+                "Le remplacement obligatoire de la voiture",
+            ],
+            answer: 1,
+        },
+        {
+            question:
+                "Que démontre principalement cet événement sur le plan de la cybersécurité ?",
+            options: [
+                "Que seules les voitures anciennes peuvent être piratées",
+                "Qu'aucune marque n'est à l'abri d'un composant vulnérable",
+                "Que les pirates ont obligatoirement besoin de supercalculateurs",
+                "Que les clés connectées sont infaillibles",
+            ],
+            answer: 1,
         },
     ];
 
@@ -187,13 +187,6 @@
             </div>
         `;
         optionsEl.appendChild(result);
-
-        feedbackEl.className =
-            "mt-5 rounded-2xl bg-white/85 px-4 py-3 text-center text-[#107AA5]";
-        feedbackEl.innerHTML = `
-            <p class="m-0 text-base font-extrabold">À retenir</p>
-            <p class="mt-1 mb-0 text-sm leading-relaxed text-slate-700">Une clé Tesla peut être clonée rapidement lorsque l'attaquant se trouve à proximité ou utilise un relais. La distance et les échanges sans authentification forte deviennent alors des points d'accès à protéger.</p>
-        `;
     }
 
     loadQuestion();
