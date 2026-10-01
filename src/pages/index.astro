@@ -72,7 +72,7 @@ const toyotaGlossary = [
 <Layout>
 	<div class="w-full min-h-screen text-[#071a27] font-sans antialiased">
 		<main
-			class="w-full max-w-[100%] pb-[160px] [@media(max-width:800px)]:pb-[80px] flex flex-col items-stretch justify-center"
+			class="w-full max-w-[100%] pb-[10px] [@media(max-width:800px)]:pb-[80px] flex flex-col items-stretch justify-center"
 		>
 			<!-- HERO / INTRODUCTION -->
 			<section
@@ -82,12 +82,12 @@ const toyotaGlossary = [
 				<!-- Badges / Tags -->
 				<div class="flex flex-wrap items-center gap-3 mb-6 md:mb-8">
 					<span
-						class="inline-flex items-center px-4 py-1.5 text-[#3b879e] text-[13.5px] font-medium tracking-wide"
+						class="inline-flex items-center px-4 py-1.5 text-[#009FE2] text-[13.5px] font-medium tracking-wide"
 					>
 						Publication : 25/09/2026
 					</span>
 					<span
-						class="inline-flex items-center px-4 py-1.5 text-[#3b879e] text-[13.5px] font-medium tracking-wide"
+						class="inline-flex items-center px-4 py-1.5 text-[#009FE2] text-[13.5px] font-medium tracking-wide"
 					>
 						Temps de lecture estimé: 25 min
 					</span>
@@ -102,15 +102,13 @@ const toyotaGlossary = [
 						class="lg:col-span-7 flex flex-col gap-10 max-w-[620px]"
 					>
 						<h1
-							class="Century Gothic text-[#0B5367] text-[clamp(48px,5.5vw,72px)] leading-[1.06] font-bold tracking-[-0.035em] text-balance m-0"
+							class="gothic text-[#04121b] text-[clamp(48px,5.5vw,72px)] leading-[1.10] font-bold tracking-auto m-0"
 						>
-							La menace de la<br />
-							piraterie<br />
-							automobile<br />
+							La menace de la piraterie automobile
 						</h1>
 
 						<div
-							class="top-5 text-[#345866] text-[18px] md:text-[19px] leading-[1.65] font-mona font-normal"
+							class="top-5 text-[#5B7688] text-[18px] md:text-[19px] leading-[1.65] font-mona font-normal"
 						>
 							<p class="m-0">
 								Ce module propose une lecture simple et concrète
@@ -180,7 +178,9 @@ const toyotaGlossary = [
 
 				<!-- Vidéo d'introduction -->
 
-				<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mx-auto">
+				<div
+					class="grid grid-cols-1 md:grid-cols-2 gap-5 mx-auto mt-10"
+				>
 					<div class="mt-20 md:mt-28 mb-12">
 						<figure
 							class="w-full max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-[0_16px_40px_rgba(7,40,58,0.09)] border-2 border-[#bfe7f1]"
@@ -220,7 +220,7 @@ const toyotaGlossary = [
 							/>.
 						</p>
 						<div
-							class="justify-center text-sky-500 text-2xl font-bold font-['Mona_Sans'] leading-10"
+							class="justify-center text-[#08a1d4] text-[18px] font-semibold"
 						>
 							Plus un véhicule est connecté, plus son degré
 							d'exposition aux cyberattaques s'élargit.
@@ -344,17 +344,24 @@ const toyotaGlossary = [
 					class="flex flex-auto gap-5 align-middle justify-center display-block items-start"
 				>
 					<div class="w-100% max-w-[600px]">
-						<iframe
-							width="600"
-							height="315"
-							src="https://www.youtube.com/embed/aVlYuPzmJoY?si=MTOEZBbc3XTQcldI"
-							title="YouTube video player"
-							frameborder="0"
-							allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-							referrerpolicy="strict-origin-when-cross-origin"
-							allowfullscreen
+						<div
+							class="bg-white rounded-[20px] p-4 shadow-[0_10px_25px_rgba(11,40,80,0.05)] flex flex-col justify-between"
 						>
-						</iframe>
+							<iframe
+								class="block w-full aspect-[16/9] rounded-xl border-0"
+								width="600"
+								height="315"
+								src="https://www.youtube.com/embed/aVlYuPzmJoY?si=MTOEZBbc3XTQcldI"
+								title="Démonstration du clonage de clé Tesla"
+								allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+								referrerpolicy="strict-origin-when-cross-origin"
+								allowfullscreen></iframe>
+							<figcaption
+								class="mt-3 text-center text-[16px] leading-tight text-[#081924]"
+							>
+								Démonstration du clonage de clé Tesla
+							</figcaption>
+						</div>
 						<p
 							class="mb-[10px] text-[#46606b] text-[18px] leading-[1.65] mt-7 max-w-[560px]"
 						>
@@ -628,7 +635,7 @@ const toyotaGlossary = [
 						</li>
 						<br />
 						<li>
-							Cette intrusion a révélé un accès total de type 							<GlossaryTerm
+							Cette intrusion a révélé un accès total de type <GlossaryTerm
 								term="administrateur"
 								definition="Un compte qui possède beaucoup de droits pour gérer un système."
 							/> permettant non seulement de contrôler à distance les
@@ -1079,5 +1086,13 @@ const toyotaGlossary = [
 		bottom: 7%;
 		z-index: 2;
 		filter: drop-shadow(0 8px 20px rgba(25, 94, 125, 0.2));
+	}
+
+	.gothic {
+		font-family:
+			Century Gothic,
+			CenturyGothic,
+			AppleGothic,
+			sans-serif;
 	}
 </style>

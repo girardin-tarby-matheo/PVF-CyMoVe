@@ -157,7 +157,7 @@ const stepsJson = JSON.stringify(rawSteps);
     <!-- Badge récapitulatif du score après vérification -->
     <div 
       id="feedback-summary-badge" 
-      class="hidden items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold transition-all"
+      class="hidden w-full items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-center text-sm font-bold shadow-[0_4px_12px_rgba(16,24,40,0.08)] transition-all sm:w-auto sm:justify-start sm:text-left"
     >
       <!-- Rempli par JavaScript -->
     </div>
@@ -679,14 +679,14 @@ const stepsJson = JSON.stringify(rawSteps);
         if (correctCount === 5) {
           feedbackBadge.classList.add("flex", "bg-emerald-100", "text-emerald-800", "border", "border-emerald-300");
           feedbackBadge.innerHTML = `
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" class="text-emerald-600"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            
             5/5 bien placées ! Bravo !
           `;
           showFinalSuccessRecap();
         } else {
           feedbackBadge.classList.add("flex", "bg-amber-100", "text-amber-900", "border", "border-amber-300");
           feedbackBadge.innerHTML = `
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="text-amber-600"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            
             ${correctCount} / 5 bien placée${correctCount > 1 ? "s" : ""} — Réessayez  !
           `;
         }
@@ -746,7 +746,7 @@ const stepsJson = JSON.stringify(rawSteps);
       activeGrabbedCard = null;
 
       if (feedbackBadge) {
-        feedbackBadge.className = "hidden";
+        feedbackBadge.className = "hidden w-full items-center justify-center gap-2 rounded-xl border px-4 py-2.5 text-center text-base font-bold shadow-[0_4px_12px_rgba(16,24,40,0.08)] transition-all sm:w-auto sm:justify-start sm:text-left";
         feedbackBadge.innerHTML = "";
       }
 
