@@ -231,14 +231,14 @@ import CymoveLogo from "../assets/cymove2.svg";
         top: var(--parent-header-height);
         align-self: start;
         width: 100%;
-        height: calc(100vh - var(--parent-header-height));
+        min-height: calc(100vh - var(--parent-header-height));
+        height: auto;
         display: flex;
         flex-direction: column;
-        padding: 56px 20px 28px 24px;
+        padding: 44px 20px 28px 24px;
         color: #0b6287;
-        overflow-y: auto;
         margin-right: 0;
-        overflow-x: hidden;
+        overflow: visible;
         transition: padding var(--menu-transition);
     }
 
@@ -302,7 +302,8 @@ import CymoveLogo from "../assets/cymove2.svg";
         flex-direction: column;
         align-items: flex-start;
         gap: 8px;
-        margin-bottom: 50px;
+        flex-shrink: 0;
+        margin-bottom: 24px;
         overflow: hidden;
         opacity: 1;
         max-width: 100%;
@@ -329,7 +330,8 @@ import CymoveLogo from "../assets/cymove2.svg";
         line-height: 1.35;
         color: #07283a;
         display: block;
-        overflow: hidden;
+        flex-shrink: 0;
+        overflow: visible;
         overflow-wrap: anywhere;
         white-space: normal;
         opacity: 1;
@@ -461,19 +463,44 @@ import CymoveLogo from "../assets/cymove2.svg";
 
     .menu[data-collapsed="true"] .brand-logos,
     .menu[data-collapsed="true"] .brand-text {
+        height: 0;
+        min-height: 0;
         max-width: 0;
         margin-bottom: 0;
         opacity: 0;
     }
 
     .menu[data-collapsed="true"] .desktop-nav {
-        margin-left: 0;
-        padding-left: 24px;
+        position: fixed;
+        top: 50%;
+        left: 0;
+        width: var(--menu-collapsed-width);
+        margin: 0;
+        padding: 0;
+        align-items: center;
+        transform: translateY(-50%);
+    }
+
+    .menu[data-collapsed="true"] .nav-link {
+        width: var(--menu-collapsed-width);
+        justify-content: center;
+    }
+
+    .menu[data-collapsed="true"] .nav-dot {
+        left: 50%;
+    }
+
+    .menu[data-collapsed="true"] .nav-link::after {
+        left: 50%;
     }
 
     .menu[data-collapsed="true"] .nav-text {
         max-width: 0;
         opacity: 0;
+    }
+
+    .menu[data-collapsed="true"] .brand-text {
+        overflow: hidden;
     }
 
     .menu[data-collapsed="true"] .nav-link::before {
@@ -664,6 +691,8 @@ import CymoveLogo from "../assets/cymove2.svg";
     }
 
     .brand-text small {
+        display: block;
+        margin-top: 8px;
         font-size: 15px;
         color: #0b6287;
         opacity: 0.85;
