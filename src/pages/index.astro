@@ -72,7 +72,7 @@ const toyotaGlossary = [
 <Layout>
 	<div class="w-full min-h-screen text-[#071a27] font-sans antialiased">
 		<main
-			class="w-full max-w-[100%] pb-[10px] [@media(max-width:800px)]:pb-[80px] flex flex-col items-stretch justify-center"
+			class="mx-auto w-full max-w-[1440px] pb-[10px] [@media(max-width:800px)]:pb-[80px] flex flex-col items-stretch justify-center"
 		>
 			<!-- HERO / INTRODUCTION -->
 			<section
@@ -127,7 +127,7 @@ const toyotaGlossary = [
 						class="lg:col-span-5 relative flex items-center justify-center lg:justify-end w-full py-4"
 					>
 						<div
-							class="hero-icons-cluster relative w-[340px] sm:w-[420px] md:w-[480px] lg:w-[460px] xl:w-[510px] aspect-[1/0.92]"
+							class="hero-icons-cluster relative w-full max-w-[510px] min-w-0 aspect-[1/0.92]"
 						>
 							<!-- Telephone Circle (top-left) -->
 							<div class="cluster-icon icon-phone">
@@ -209,7 +209,7 @@ const toyotaGlossary = [
 						</p>
 						<p class="text-[#5B7688] text-[18px]">
 							Le secteur automobile a vu les cyberattaques le
-							visant augmenter de 225 % entre 2019 et 2022, avec
+							visant se multiplier par 3 entre 2019 et 2022, avec
 							parmi les méthodes les plus fréquentes le vol de
 							véhicule par <GlossaryTerm
 								term="relayage de signal"
@@ -231,9 +231,7 @@ const toyotaGlossary = [
 
 			<!-- CAS 4 -->
 			<section class="mb-[116px] scroll-mt-7" id="cas-4">
-				<div
-					class="flex mb-5 gap-7 flex-column display-flex display-blockalign-baseline"
-				>
+				<div class="flex flex-wrap items-center gap-3 sm:gap-4 mb-5">
 					<h2
 						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
 					>
@@ -241,11 +239,35 @@ const toyotaGlossary = [
 							>Toyota Lexus</em
 						>
 					</h2>
-					<p
-						class="text-[#08a1d4] text-[20px] mt-1 font-(Segoe UI) font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
-					>
-						2023
-					</p>
+					<div class="flex items-center gap-2.5">
+						<span
+							class="text-[#08a1d4] text-[18px] sm:text-[20px] font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-3 py-0.5 inline-block"
+						>
+							2023
+						</span>
+						<a
+							href="https://kentindell.github.io/2023/04/03/can-injection/"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[50px] bg-[#e8f9fc] border border-[#8ed9e8] text-[#0879ae] hover:text-white hover:bg-[#08a1d4] hover:border-[#08a1d4] text-[13px] font-extrabold tracking-[0.04em] uppercase transition-all duration-200 shadow-[0_3px_10px_rgba(8,161,212,0.12)] hover:shadow-[0_6px_16px_rgba(8,161,212,0.2)] group"
+							title="Consulter l'article de recherche original (Ken Tindell)"
+						>
+							<span>Source</span>
+							<svg
+								aria-hidden="true"
+								class="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M7 17 17 7m0 0H10m7 0v7"></path>
+							</svg>
+						</a>
+					</div>
 				</div>
 				<p
 					class="mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
@@ -310,7 +332,7 @@ const toyotaGlossary = [
 
 			<!-- CAS 3 -->
 			<section class="mb-[130px] scroll-mt-7" id="cas-3">
-				<div class="flex mb-5 gap-7 flex-column">
+				<div class="flex flex-wrap items-center gap-3 sm:gap-4 mb-5">
 					<h2
 						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
 					>
@@ -318,11 +340,35 @@ const toyotaGlossary = [
 							class="text-[#1b70d3] not-italic">Tesla Model S</em
 						>
 					</h2>
-					<p
-						class="text-[#08a1d4] text-[20px] mt-1 font-(Segoe UI) font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
-					>
-						2018
-					</p>
+					<div class="flex items-center gap-2.5">
+						<span
+							class="text-[#08a1d4] text-[18px] sm:text-[20px] font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-3 py-0.5 inline-block"
+						>
+							2018
+						</span>
+						<a
+							href="https://www.wired.com/story/hackers-steal-tesla-model-s-seconds-key-fob"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[50px] bg-[#e8f9fc] border border-[#8ed9e8] text-[#0879ae] hover:text-white hover:bg-[#08a1d4] hover:border-[#08a1d4] text-[13px] font-extrabold tracking-[0.04em] uppercase transition-all duration-200 shadow-[0_3px_10px_rgba(8,161,212,0.12)] hover:shadow-[0_6px_16px_rgba(8,161,212,0.2)] group"
+							title="Consulter l'article de presse original (Wired)"
+						>
+							<span>Source</span>
+							<svg
+								aria-hidden="true"
+								class="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M7 17 17 7m0 0H10m7 0v7"></path>
+							</svg>
+						</a>
+					</div>
 				</div>
 				<p
 					class="mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
@@ -343,7 +389,7 @@ const toyotaGlossary = [
 				<div
 					class="flex flex-auto gap-5 align-middle justify-center display-block items-start"
 				>
-					<div class="w-100% max-w-[600px]">
+					<div class="w-full max-w-[600px]">
 						<div
 							class="bg-white rounded-[20px] p-4 shadow-[0_10px_25px_rgba(11,40,80,0.05)] flex flex-col justify-between"
 						>
@@ -420,7 +466,7 @@ const toyotaGlossary = [
 
 			<!-- CAS 2 -->
 			<section class="mb-[116px] scroll-mt-7" id="cas-2">
-				<div class="flex mb-5 gap-7 flex-column">
+				<div class="flex flex-wrap items-center gap-3 sm:gap-4 mb-5">
 					<h2
 						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
 					>
@@ -428,11 +474,35 @@ const toyotaGlossary = [
 							class="text-[#1b70d3] not-italic">BMW</em
 						>
 					</h2>
-					<p
-						class="text-[#08a1d4] text-[20px] mt-1 font-(Segoe UI) font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
-					>
-						2015
-					</p>
+					<div class="flex items-center gap-2.5">
+						<span
+							class="text-[#08a1d4] text-[18px] sm:text-[20px] font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-3 py-0.5 inline-block"
+						>
+							2015
+						</span>
+						<a
+							href="https://www.fiaregion1.com/wp-content/uploads/2015/01/BMW-security-loopholes.pdf"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[50px] bg-[#e8f9fc] border border-[#8ed9e8] text-[#0879ae] hover:text-white hover:bg-[#08a1d4] hover:border-[#08a1d4] text-[13px] font-extrabold tracking-[0.04em] uppercase transition-all duration-200 shadow-[0_3px_10px_rgba(8,161,212,0.12)] hover:shadow-[0_6px_16px_rgba(8,161,212,0.2)] group"
+							title="Consulter le rapport d'audit original (FIA / ADAC)"
+						>
+							<span>Source</span>
+							<svg
+								aria-hidden="true"
+								class="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M7 17 17 7m0 0H10m7 0v7"></path>
+							</svg>
+						</a>
+					</div>
 				</div>
 				<p
 					class="mb-[10px] text-[#46606b] text-[18px] leading-[1.65] m-0"
@@ -571,7 +641,7 @@ const toyotaGlossary = [
 
 			<!-- CAS 1 -->
 			<section class="mb-29 scroll-mt-7" id="cas-1">
-				<div class="flex mb-5 gap-7 align-items-bottom flex-column">
+				<div class="flex flex-wrap items-center gap-3 sm:gap-4 mb-5">
 					<h2
 						class="m-0 text-[#081924] text-[clamp(25px,3vw,44px)] leading-[1.1] tracking-[-0.052em] font-bold"
 					>
@@ -579,11 +649,35 @@ const toyotaGlossary = [
 							>Subaru</em
 						>
 					</h2>
-					<p
-						class="text-[#08a1d4] text-[20px] mt-1 font-(Segoe UI) font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-2 py-1 inline-block"
-					>
-						2025
-					</p>
+					<div class="flex items-center gap-2.5">
+						<span
+							class="text-[#08a1d4] text-[18px] sm:text-[20px] font-bold tracking-[0.05em] uppercase border-2 border-[#08a1d4] rounded-[50px] px-3 py-0.5 inline-block"
+						>
+							2025
+						</span>
+						<a
+							href="https://www.wired.com/story/subaru-location-tracking-vulnerabilities"
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-[50px] bg-[#e8f9fc] border border-[#8ed9e8] text-[#0879ae] hover:text-white hover:bg-[#08a1d4] hover:border-[#08a1d4] text-[13px] font-extrabold tracking-[0.04em] uppercase transition-all duration-200 shadow-[0_3px_10px_rgba(8,161,212,0.12)] hover:shadow-[0_6px_16px_rgba(8,161,212,0.2)] group"
+							title="Consulter l'article de presse original (Wired)"
+						>
+							<span>Source</span>
+							<svg
+								aria-hidden="true"
+								class="w-4 h-4 transition-transform duration-200 group-hover:translate-y-0.5"
+								fill="none"
+								viewBox="0 0 24 24"
+								stroke="currentColor"
+								stroke-width="2"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									d="M7 17 17 7m0 0H10m7 0v7"></path>
+							</svg>
+						</a>
+					</div>
 				</div>
 
 				<p

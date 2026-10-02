@@ -76,14 +76,14 @@ const stepsJson = JSON.stringify(rawSteps);
 
   <!-- 1. ZONE DES 5 EMPLACEMENTS RÉCEPTEURS (SLOTS) -->
   <div 
-    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5 sm:gap-4 mb-4" 
+    class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4 mb-4" 
     id="slots-container"
     role="region"
     aria-label="Emplacements chronologiques de 1 à 5"
   >
     {[1, 2, 3, 4, 5].map((slotNumber) => (
       <div
-        class="reorder-slot relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#b9d5ff] bg-[#f0f6ff]/75 p-2.5 transition-all duration-200 min-h-[190px] sm:min-h-[220px] md:min-h-[250px] [aspect-ratio:3/4] focus-within:ring-3 focus-within:ring-[#2F6FED]"
+        class="reorder-slot relative flex flex-col items-center justify-center rounded-2xl border-2 border-dashed border-[#b9d5ff] bg-[#f0f6ff]/75 p-2.5 transition-all duration-200 min-h-[190px] sm:min-h-[220px] lg:min-h-[250px] [aspect-ratio:3/4] focus-within:ring-3 focus-within:ring-[#2F6FED]"
         data-slot-id={slotNumber}
         tabindex="0"
         role="group"
@@ -118,7 +118,7 @@ const stepsJson = JSON.stringify(rawSteps);
 
     <div
       id="cards-pool"
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl border-2 border-dashed border-[#cbe0fc] bg-[#f5f9ff]/60 min-h-[140px] transition-all"
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5 sm:gap-4 p-3.5 sm:p-4 rounded-2xl border-2 border-dashed border-[#cbe0fc] bg-[#f5f9ff]/60 min-h-[140px] transition-all"
       role="region"
       aria-label="Zone des cartes à placer"
     >
@@ -285,7 +285,7 @@ const stepsJson = JSON.stringify(rawSteps);
     function createCardElement(stepData: StepData): HTMLElement {
       const card = document.createElement("div");
       card.className =
-        "reorder-card relative z-10 w-full h-full min-h-[175px] sm:min-h-[200px] md:min-h-[235px] [aspect-ratio:3/4] rounded-2xl border-[4px] border-[#a6c4ff] bg-white p-3.5 sm:p-4 flex flex-col justify-between items-center text-center shadow-[0_4px_12px_rgba(16,24,40,0.08)] transition-all duration-200 select-none cursor-grab active:cursor-grabbing hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(16,24,40,0.12)] hover:border-[#83abfc] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2F6FED]";
+        "reorder-card relative z-10 w-full h-full min-h-[175px] sm:min-h-[200px] lg:min-h-[235px] [aspect-ratio:3/4] rounded-2xl border-[4px] border-[#a6c4ff] bg-white p-3.5 sm:p-4 flex flex-col justify-between items-center text-center shadow-[0_4px_12px_rgba(16,24,40,0.08)] transition-all duration-200 select-none cursor-grab active:cursor-grabbing hover:scale-[1.02] hover:shadow-[0_8px_20px_rgba(16,24,40,0.12)] hover:border-[#83abfc] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#2F6FED]";
       
       card.setAttribute("draggable", "true");
       card.setAttribute("tabindex", "0");

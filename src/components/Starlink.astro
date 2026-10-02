@@ -61,7 +61,7 @@ import carImg from "../assets/car2.png"; // Assurez-vous que ce chemin est corre
         <!-- ÉTAPE 1 -->
         <div
             id="sim-step-1"
-            class="hidden w-full max-w-[800px] grid grid-cols-2 gap-8 my-auto animate-[fadeIn_0.5s_ease-out]"
+            class="hidden w-full max-w-[800px] grid grid-cols-1 md:grid-cols-2 gap-8 my-auto animate-[fadeIn_0.5s_ease-out]"
         >
             <div class="flex flex-col gap-3">
                 <span class="text-[#72a69e] text-[15px] font-bold"
@@ -88,7 +88,7 @@ import carImg from "../assets/car2.png"; // Assurez-vous que ce chemin est corre
         <!-- ÉTAPE 2 -->
         <div
             id="sim-step-2"
-            class="hidden w-full grid grid-cols-2 gap-6 my-auto"
+            class="hidden w-full grid grid-cols-1 md:grid-cols-2 gap-6 my-auto"
         >
             <!-- Vignette 1 : Carte GPS intégrant mapImg -->
             <div
@@ -165,7 +165,9 @@ import carImg from "../assets/car2.png"; // Assurez-vous que ce chemin est corre
                     Contrôle du véhicule
                 </div>
 
-                <div class="grid grid-cols-2 gap-4 items-center my-auto">
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-4 items-center my-auto"
+                >
                     <!-- Boîte de prévisualisation avec carImg et statuts dynamiques -->
                     <div
                         class="border border-[#38b06c]/30 rounded-[10px] bg-[#07221C] p-3 flex flex-col items-center justify-center relative"
@@ -228,7 +230,9 @@ import carImg from "../assets/car2.png"; // Assurez-vous que ce chemin est corre
                 <div class="text-[#72a69e] text-[14px] font-bold mb-2">
                     Infos personnelles
                 </div>
-                <div class="grid grid-cols-2 gap-3 text-[13px] text-[#b2d5ce]">
+                <div
+                    class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-[13px] text-[#b2d5ce]"
+                >
                     <div>
                         <div class="text-[#38b06c] mb-1 font-semibold">
                             090-1234-5678
